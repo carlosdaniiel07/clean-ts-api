@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/carlosdaniiel07/clean-ts-api#readme",
   "devDependencies": {
+    "@shelf/jest-mongodb": "^2.2.0",
     "@types/bcrypt": "^5.0.0",
     "@types/jest": "^27.0.1",
     "@types/node": "^16.7.1",
@@ -45,6 +46,7 @@
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
+    "mongodb": "^4.3.1",
     "validator": "^13.6.0"
   }
 }
