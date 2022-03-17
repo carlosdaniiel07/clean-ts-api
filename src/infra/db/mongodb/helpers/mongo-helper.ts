@@ -18,5 +18,9 @@ export const MongoHelper = {
   mapToModel<T>(model: any): T {
     const { _id, ...data } = model
     return Object.assign({}, data, { id: _id })
+  },
+
+  mapToModels<T>(models: any[]): T[] {
+    return models.map(model => this.mapToModel(model))
   }
 }
