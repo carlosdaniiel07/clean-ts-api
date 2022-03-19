@@ -7,7 +7,10 @@ describe('Accounts routes', () => {
 
   afterAll(async () => await MongoHelper.disconnect())
 
-  beforeEach(async () => await MongoHelper.getCollection('accounts').deleteMany({}))
+  beforeEach(async () => {
+    const collection = await MongoHelper.getCollection('accounts')
+    await collection.deleteMany({})
+  })
 
   test('should return all accounts on success', async () => {
     await createMockAccount()

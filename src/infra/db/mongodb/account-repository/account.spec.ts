@@ -11,7 +11,10 @@ describe('Account Mongo Repository', () => {
 
   afterAll(async () => await MongoHelper.disconnect())
 
-  beforeEach(async () => await MongoHelper.getCollection('accounts').deleteMany({}))
+  beforeEach(async () => {
+    const collection = await MongoHelper.getCollection('accounts')
+    await collection.deleteMany({})
+  })
 
   test('should create an account and return on success', async () => {
     const account = await createAccount()
