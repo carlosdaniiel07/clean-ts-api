@@ -13,13 +13,8 @@ describe('Account Mongo Repository', () => {
 
   beforeEach(async () => await MongoHelper.getCollection('accounts').deleteMany({}))
 
-  test('should return an account on success', async () => {
-    const sut = makeSut()
-    const account = await sut.add({
-      name: 'any_name',
-      email: 'any_email',
-      password: 'any_password'
-    })
+  test('should create an account and return on success', async () => {
+    const account = await createAccount()
 
     expect(account).toBeTruthy()
     expect(account).toEqual<AccountModel>({
@@ -29,4 +24,24 @@ describe('Account Mongo Repository', () => {
       password: 'any_password'
     })
   })
+
+  test('should get all accounts', async () => {
+    const sut = makeSut()
+    const account = await createAccount()
+    const response = await sut.getAll()
+
+    expect(response).toBeTruthy()
+    expect(response).toEqual([
+      account
+    ])
+  })
+
+  const createAccount = async (): Promise<AccountModel> => {
+    const sut = makeSut()
+    return await sut.add({
+      name: 'any_name',
+      email: 'any_email',
+      password: 'any_password'
+    })
+  }
 })
