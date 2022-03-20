@@ -1,3 +1,4 @@
+import { LogErrorRepository } from '../../data/protocols/log-error-repository'
 import { serverError } from '../../presentation/helpers/http-helper'
 import { Controller, HttpRequest, HttpResponse } from '../../presentation/protocols'
 import { LogControllerDecorator } from './log'
@@ -5,6 +6,7 @@ import { LogControllerDecorator } from './log'
 interface SutTypes {
   sut: LogControllerDecorator
   controller: Controller
+  logErrorRepository: LogErrorRepository
 }
 
 const makeController = (): Controller => {
@@ -17,14 +19,33 @@ const makeController = (): Controller => {
   return new ControllerStub()
 }
 
+const makeLogErrorRepository = (): LogErrorRepository => {
+  class LogErrorRepositoryStub implements LogErrorRepository {
+    async log (stackTrace: string): Promise<void> {
+      await Promise.resolve()
+    }
+  }
+
+  return new LogErrorRepositoryStub()
+}
+
 const makeSut = (): SutTypes => {
   const controller = makeController()
-  const sut = new LogControllerDecorator(controller)
+  const logErrorRepository = makeLogErrorRepository()
+  const sut = new LogControllerDecorator(controller, logErrorRepository)
 
   return {
     controller,
-    sut
+    sut,
+    logErrorRepository
   }
+}
+
+const makeFakeError = (): Error => {
+  const error = new Error()
+  error.stack = 'fake_stack_trace'
+
+  return error
 }
 
 describe('LogController decorator', () => {
@@ -62,14 +83,18 @@ describe('LogController decorator', () => {
     expect(response).toEqual(httpResponse)
   })
 
-  test('should log error if controller returns 500 status code', async () => {
-    const { sut } = makeSut()
-    const spy = jest.spyOn(console, 'error')
+  test('should call LogErrorRepository with correct value if controller returns server error', async () => {
+    const { sut, controller, logErrorRepository } = makeSut()
+    const fakeError = makeFakeError()
+    const error = serverError(fakeError)
+    const spy = jest.spyOn(logErrorRepository, 'log')
 
-    const httpResponse = await sut.handle({
+    jest.spyOn(controller, 'handle').mockImplementation(async () => await Promise.resolve(error))
+
+    await sut.handle({
       body: null
     })
 
-    expect(spy).toHaveBeenCalledWith(httpResponse)
+    expect(spy).toHaveBeenCalledWith(fakeError.stack)
   })
 })
