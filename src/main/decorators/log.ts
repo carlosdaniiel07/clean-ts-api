@@ -1,3 +1,5 @@
+import { LogErrorRepository } from '../../data/protocols/log-error-repository'
+import { ServerError } from '../../presentation/errors'
 import { serverError } from '../../presentation/helpers/http-helper'
 import {
   Controller,
@@ -7,9 +9,11 @@ import {
 
 export class LogControllerDecorator implements Controller {
   private readonly controller: Controller
+  private readonly logErrorRepository?: LogErrorRepository
 
-  constructor (controller: Controller) {
+  constructor (controller: Controller, logErrorRepository: LogErrorRepository) {
     this.controller = controller
+    this.logErrorRepository = logErrorRepository
   }
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
@@ -17,7 +21,8 @@ export class LogControllerDecorator implements Controller {
     const isInternalServerError = httpResponse.statusCode === serverError().statusCode
 
     if (isInternalServerError) {
-      console.error(httpResponse)
+      const error = httpResponse.body as ServerError
+      await this.logErrorRepository?.log(error?.stack ?? '')
     }
 
     return httpResponse
