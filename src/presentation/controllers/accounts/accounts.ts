@@ -12,7 +12,7 @@ export class AccountsController implements Controller {
       const data = await this.getAccounts.getAll()
       return ok(data)
     } catch (error) {
-      return serverError()
+      return serverError(error)
     }
   }
 }
