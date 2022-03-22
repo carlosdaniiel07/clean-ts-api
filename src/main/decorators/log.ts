@@ -22,7 +22,7 @@ export class LogControllerDecorator implements Controller {
 
     if (isInternalServerError) {
       const error = httpResponse.body as ServerError
-      await this.logErrorRepository?.log(error?.stack ?? '')
+      await this.logErrorRepository?.logError(error?.stack ?? '')
     }
 
     return httpResponse
