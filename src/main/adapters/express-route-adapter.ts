@@ -8,6 +8,16 @@ export const adaptRoute = (controller: Controller): ExpressController => {
     const { statusCode, body } = await controller.handle({
       body: req.body
     })
-    return res.status(statusCode).send(body)
+
+    if (isSuccessResponse(statusCode)) {
+      return res.status(statusCode).send(body)
+    } else {
+      return res.status(statusCode).send({
+        error: body?.message
+      })
+    }
   }
 }
+
+const isSuccessResponse = (statusCode: number): boolean =>
+  statusCode >= 200 && statusCode <= 299
