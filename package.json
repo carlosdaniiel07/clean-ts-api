@@ -4,7 +4,7 @@
   "description": "Repositório para o desenvolvimento do projeto abordado no curso \"NodeJs, Typescript, TDD, DDD, Clean Architecture e SOLID\" (https://www.udemy.com/course/tdd-com-mango)",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node src/main/server.ts",
+    "start": "ts-node-dev src/main/server.ts",
     "test": "jest --passWithNoTests --silent --noStackTrace --runInBand",
     "test:staged": "npm test -- --findRelatedTests",
     "test:verbose": "jest --passWithNoTests",
@@ -45,7 +45,7 @@
     "lint-staged": "^11.1.2",
     "supertest": "^6.2.2",
     "ts-jest": "^27.0.5",
-    "ts-node": "^10.2.1",
+    "ts-node-dev": "^1.1.8",
     "typescript": "^4.3.5"
   },
   "dependencies": {
