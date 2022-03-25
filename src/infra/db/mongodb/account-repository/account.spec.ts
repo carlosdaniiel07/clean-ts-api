@@ -28,6 +28,22 @@ describe('Account Mongo Repository', () => {
     })
   })
 
+  test('should update account access token', async () => {
+    const sut = makeSut()
+    const account = await createAccount()
+    const accessToken = 'any_accessToken'
+
+    // TODO: Entender melhor porque não realizou map corretamente
+    // eslint-disable-next-line @typescript-eslint/dot-notation
+    await sut.updateAccessToken(account['_id'], accessToken)
+
+    const collection = await MongoHelper.getCollection('accounts')
+    const [updatedAccount] = await collection.find().toArray()
+
+    expect(updatedAccount).toBeTruthy()
+    expect(updatedAccount).toHaveProperty('accessToken', accessToken)
+  })
+
   test('should get all accounts', async () => {
     const sut = makeSut()
     const account = await createAccount()
@@ -37,6 +53,22 @@ describe('Account Mongo Repository', () => {
     expect(response).toEqual([
       account
     ])
+  })
+
+  test('should get an account by email', async () => {
+    const sut = makeSut()
+    const account = await createAccount()
+    const response = await sut.getByEmail(account.email)
+
+    expect(response).toBeTruthy()
+    expect(response).toEqual(account)
+  })
+
+  test('should return null if account with specified email was not found', async () => {
+    const sut = makeSut()
+    const response = await sut.getByEmail('any_email')
+
+    expect(response).toBeNull()
   })
 
   const createAccount = async (): Promise<AccountModel> => {
