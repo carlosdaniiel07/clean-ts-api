@@ -1,4 +1,4 @@
-import { GetAccountsRepository } from '../../data/protocols/get-accounts-repository'
+import { GetAccountsRepository } from '../../data/protocols/db/get-accounts-repository'
 import { DbGetAccounts } from '../../data/usecases/get-accounts/db-get-accounts'
 import { GetAccounts } from '../../domain/usecases/get-accounts'
 import { AccountMongoRepository } from '../../infra/db/mongodb/account-repository/account'
