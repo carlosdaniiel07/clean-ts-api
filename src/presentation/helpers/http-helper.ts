@@ -20,3 +20,8 @@ export const serverError = (error?: Error): HttpResponse => ({
   statusCode: 500,
   body: new ServerError(error?.stack)
 })
+
+export const unauthorized = (): HttpResponse => ({
+  statusCode: 401,
+  body: null
+})

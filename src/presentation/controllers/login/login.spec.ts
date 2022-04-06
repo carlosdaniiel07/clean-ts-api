@@ -1,6 +1,6 @@
 import { Authentication, AuthenticationModel } from '../../../domain/usecases/authentication'
 import { MissingParamError } from '../../errors'
-import { badRequest, ok, serverError } from '../../helpers/http-helper'
+import { badRequest, ok, unauthorized } from '../../helpers/http-helper'
 import { Validation } from '../../helpers/validators/validation'
 import { HttpRequest } from '../../protocols'
 import { LoginController } from './login'
@@ -82,7 +82,7 @@ describe('Login controller', () => {
     expect(spy).toHaveBeenCalledWith(httpRequest.body)
   })
 
-  test('should return 500 if Authentication throws', async () => {
+  test('should return 401 if Authentication throws', async () => {
     const { sut, authentication } = makeSut()
     const httpRequest = makeFakeHttpRequest()
 
@@ -92,7 +92,7 @@ describe('Login controller', () => {
 
     const httpResponse = await sut.handle(httpRequest)
 
-    expect(httpResponse).toEqual(serverError())
+    expect(httpResponse).toEqual(unauthorized())
   })
 
   test('should return access token if success', async () => {

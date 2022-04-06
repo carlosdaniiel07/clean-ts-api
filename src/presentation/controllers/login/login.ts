@@ -1,5 +1,5 @@
 import { Authentication } from '../../../domain/usecases/authentication'
-import { badRequest, ok, serverError } from '../../helpers/http-helper'
+import { badRequest, ok, unauthorized } from '../../helpers/http-helper'
 import { Validation } from '../../helpers/validators/validation'
 import { Controller, HttpRequest, HttpResponse } from '../../protocols'
 
@@ -28,7 +28,7 @@ export class LoginController implements Controller {
         accessToken
       })
     } catch (err) {
-      return serverError(err)
+      return unauthorized()
     }
   }
 }
