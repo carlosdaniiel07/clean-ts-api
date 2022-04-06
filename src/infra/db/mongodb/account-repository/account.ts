@@ -28,8 +28,6 @@ implements
 
   async updateAccessToken (id: string, accessToken: string): Promise<void> {
     const collection = await MongoHelper.getCollection('accounts')
-
-    // TODO: Verificar se a lógica é realmente essa
     await collection.updateOne({
       id
     }, {
