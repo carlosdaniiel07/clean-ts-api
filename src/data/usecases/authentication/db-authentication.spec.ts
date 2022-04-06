@@ -1,6 +1,6 @@
 import { AuthenticationModel } from '../../../domain/usecases/authentication'
 import { GetAccountByEmailRepository } from '../../protocols/get-account-by-email-repository'
-import { HashComparer } from '../../protocols/hash'
+import { HashComparer } from '../../protocols/cryptography/hash'
 import { TokenGenerator } from '../../protocols/token-generator'
 import { UpdateAccessTokenRepository } from '../../protocols/update-access-token-repository'
 import { AccountModel } from '../add-account/db-add-account.protocols'

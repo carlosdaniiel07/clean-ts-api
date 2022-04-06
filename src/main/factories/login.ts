@@ -1,5 +1,5 @@
 import { GetAccountByEmailRepository } from '../../data/protocols/get-account-by-email-repository'
-import { HashComparer } from '../../data/protocols/hash'
+import { HashComparer } from '../../data/protocols/cryptography/hash'
 import { LogErrorRepository } from '../../data/protocols/log-error-repository'
 import { TokenGenerator } from '../../data/protocols/token-generator'
 import { UpdateAccessTokenRepository } from '../../data/protocols/update-access-token-repository'
