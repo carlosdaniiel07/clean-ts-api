@@ -1,5 +1,5 @@
 import { sign } from 'jsonwebtoken'
-import { TokenGenerator } from '../../data/protocols/token-generator'
+import { TokenGenerator } from '../../data/protocols/cryptography/token-generator'
 import { AccountModel } from '../../domain/models/account'
 import config from '../../main/config/env'
 
