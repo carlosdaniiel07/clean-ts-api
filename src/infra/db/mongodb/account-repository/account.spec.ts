@@ -33,12 +33,12 @@ describe('Account Mongo Repository', () => {
     const account = await createAccount()
     const accessToken = 'any_accessToken'
 
-    // TODO: Entender melhor porque não realizou map corretamente
-    // eslint-disable-next-line @typescript-eslint/dot-notation
-    await sut.updateAccessToken(account['_id'], accessToken)
+    await sut.updateAccessToken((account as any)._id, accessToken)
 
     const collection = await MongoHelper.getCollection('accounts')
-    const [updatedAccount] = await collection.find().toArray()
+    const updatedAccount = await collection.findOne({
+      accessToken
+    })
 
     expect(updatedAccount).toBeTruthy()
     expect(updatedAccount).toHaveProperty('accessToken', accessToken)
