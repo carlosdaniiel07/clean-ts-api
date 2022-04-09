@@ -23,5 +23,5 @@ export const serverError = (error?: Error): HttpResponse => ({
 
 export const unauthorized = (): HttpResponse => ({
   statusCode: 401,
-  body: null
+  body: new Error('Unauthorized')
 })
