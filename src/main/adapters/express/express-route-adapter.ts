@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { Controller } from '../../presentation/protocols'
+import { Controller } from '../../../presentation/protocols'
 
 type ExpressController = (req: Request, res: Response) => void
 
