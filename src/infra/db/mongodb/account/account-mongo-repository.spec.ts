@@ -33,7 +33,7 @@ describe('Account Mongo Repository', () => {
     const account = await createAccount()
     const accessToken = 'any_accessToken'
 
-    await sut.updateAccessToken((account as any)._id, accessToken)
+    await sut.updateAccessToken(account.id, accessToken)
 
     const collection = await MongoHelper.getCollection('accounts')
     const updatedAccount = await collection.findOne({
