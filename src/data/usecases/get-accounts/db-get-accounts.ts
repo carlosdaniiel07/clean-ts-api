@@ -1,5 +1,5 @@
 import { GetAccounts } from '../../../domain/usecases/get-accounts'
-import { GetAccountsRepository } from '../../protocols/db/get-accounts-repository'
+import { GetAccountsRepository } from '../../protocols/db/account/get-accounts-repository'
 import { AccountModel } from '../add-account/db-add-account.protocols'
 
 export class DbGetAccounts implements GetAccounts {

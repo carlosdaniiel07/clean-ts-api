@@ -1,7 +1,7 @@
 import { GetAccounts } from '../../../domain/usecases/get-accounts'
 import { ServerError } from '../../errors'
-import { AccountModel } from '../signup/signup-protocols'
-import { AccountsController } from './accounts'
+import { AccountModel } from '../signup/signup-controller-protocols'
+import { AccountsController } from './accounts-controller'
 
 interface SutTypes {
   sut: AccountsController
