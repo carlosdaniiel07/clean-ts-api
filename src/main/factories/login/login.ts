@@ -6,7 +6,7 @@ import { UpdateAccessTokenRepository } from '../../../data/protocols/db/account/
 import { DbAuthentication } from '../../../data/usecases/authentication/db-authentication'
 import { Authentication } from '../../../domain/usecases/authentication'
 import { BCryptAdapter } from '../../../infra/cryptography/bcrypt-adapter'
-import { AccountMongoRepository } from '../../../infra/db/mongodb/account/account-mong-repository'
+import { AccountMongoRepository } from '../../../infra/db/mongodb/account/account-mongo-repository'
 import { LogMongoRepository } from '../../../infra/db/mongodb/log/log-mongo-repository'
 import { JwtAdapter } from '../../../infra/cryptography/jwt-adapter'
 import { LoginController } from '../../../presentation/controllers/login/login-controller'

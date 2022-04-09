@@ -1,7 +1,7 @@
 import { GetAccountsRepository } from '../../../data/protocols/db/account/get-accounts-repository'
 import { DbGetAccounts } from '../../../data/usecases/get-accounts/db-get-accounts'
 import { GetAccounts } from '../../../domain/usecases/get-accounts'
-import { AccountMongoRepository } from '../../../infra/db/mongodb/account/account-mong-repository'
+import { AccountMongoRepository } from '../../../infra/db/mongodb/account/account-mongo-repository'
 import { LogMongoRepository } from '../../../infra/db/mongodb/log/log-mongo-repository'
 import { AccountsController } from '../../../presentation/controllers/accounts/accounts-controller'
 import { Controller } from '../../../presentation/protocols'
