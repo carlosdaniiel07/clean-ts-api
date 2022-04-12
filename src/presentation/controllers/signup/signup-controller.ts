@@ -1,3 +1,4 @@
+import { Authentication } from '../../../domain/usecases/authentication'
 import { badRequest, created, serverError } from '../../helpers/http-helper'
 import { Validation } from '../../helpers/validators/validation'
 import {
@@ -10,6 +11,7 @@ import {
 export class SignUpController implements Controller {
   constructor (
     private readonly addAccount: AddAccount,
+    private readonly authentication: Authentication,
     private readonly validation: Validation
   ) {}
 
@@ -22,13 +24,19 @@ export class SignUpController implements Controller {
       }
 
       const { name, email, password } = httpRequest.body
-      const account = await this.addAccount.add({
+
+      await this.addAccount.add({
         name,
         email,
         password
       })
 
-      return created(account)
+      const accessToken = await this.authentication.auth({
+        email,
+        password
+      })
+
+      return created({ accessToken })
     } catch (error) {
       return serverError(error)
     }
