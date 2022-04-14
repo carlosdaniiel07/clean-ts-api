@@ -1,10 +1,10 @@
-import { CompareFieldsValidation } from '../../../../presentation/helpers/validators/compare-fields-validation'
-import { EmailValidation } from '../../../../presentation/helpers/validators/email-validation'
-import { RequiredFieldValidation } from '../../../../presentation/helpers/validators/required-field-validation'
+import { CompareFieldsValidation } from '../../../../validation/validators/compare-fields-validation'
+import { EmailValidation } from '../../../../validation/validators/email-validation'
+import { RequiredFieldValidation } from '../../../../validation/validators/required-field-validation'
 import { Validation } from '../../../../presentation/protocols/validation'
-import { ValidationComposite } from '../../../../presentation/helpers/validators/validation-composite'
-import { EmailValidator } from '../../../../presentation/protocols'
-import { EmailValidatorAdapter } from '../../../adapters/validators/email-validator-adapter'
+import { ValidationComposite } from '../../../../validation/validators/validation-composite'
+import { EmailValidatorAdapter } from '../../../../infra/validators/email-validator-adapter'
+import { EmailValidator } from '../../../../validation/protocols/email-validator'
 
 export const makeSignUpValidation = (): Validation => {
   const emailValidator: EmailValidator = new EmailValidatorAdapter()

@@ -1,10 +1,10 @@
-import { EmailValidation } from '../../../../presentation/helpers/validators/email-validation'
-import { RequiredFieldValidation } from '../../../../presentation/helpers/validators/required-field-validation'
-import { ValidationComposite } from '../../../../presentation/helpers/validators/validation-composite'
-import { EmailValidator } from '../../../../presentation/protocols'
+import { EmailValidator } from '../../../../validation/protocols/email-validator'
+import { EmailValidation } from '../../../../validation/validators/email-validation'
+import { RequiredFieldValidation } from '../../../../validation/validators/required-field-validation'
+import { ValidationComposite } from '../../../../validation/validators/validation-composite'
 import { makeLoginValidation } from './login-validation-factory'
 
-jest.mock('../../../../presentation/helpers/validators/validation-composite')
+jest.mock('../../../../validation/validators/validation-composite')
 
 interface SutTypes {
   emailValidator: EmailValidator
