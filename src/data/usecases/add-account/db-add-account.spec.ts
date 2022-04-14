@@ -1,3 +1,4 @@
+import { GetAccountByEmailRepository } from '../../protocols/db/account/get-account-by-email-repository'
 import { DbAddAccount } from './db-add-account'
 import { AccountModel, AddAccountModel, AddAccountRepository, Encrypter } from './db-add-account.protocols'
 
@@ -17,6 +18,7 @@ const makeFakeAddAccountModel = (): AddAccountModel => ({
 interface SutTypes {
   encrypterStub: Encrypter
   addAccountRepositoryStub: AddAccountRepository
+  getAccountByEmailRepositoryStub: GetAccountByEmailRepository
   sut: DbAddAccount
 }
 
@@ -40,14 +42,26 @@ const makeAddAccountRepository = (): AddAccountRepository => {
   return new AddAccountRepositoryStub()
 }
 
+const makeGetAccountByEmailRepository = (): GetAccountByEmailRepository => {
+  class GetAccountByEmailRepositoryStub implements GetAccountByEmailRepository {
+    async getByEmail (email: string): Promise<AccountModel | null> {
+      return await Promise.resolve(null)
+    }
+  }
+
+  return new GetAccountByEmailRepositoryStub()
+}
+
 const makeSut = (): SutTypes => {
   const encrypterStub = makeEncrypter()
   const addAccountRepositoryStub = makeAddAccountRepository()
-  const sut = new DbAddAccount(encrypterStub, addAccountRepositoryStub)
+  const getAccountByEmailRepositoryStub = makeGetAccountByEmailRepository()
+  const sut = new DbAddAccount(encrypterStub, addAccountRepositoryStub, getAccountByEmailRepositoryStub)
 
   return {
     encrypterStub,
     addAccountRepositoryStub,
+    getAccountByEmailRepositoryStub,
     sut
   }
 }
@@ -101,6 +115,27 @@ describe('DbAddAccount usecase', () => {
     const promise = sut.add(data)
 
     await expect(promise).rejects.toThrow()
+  })
+
+  test('should call GetAccountByEmailRepository with correct value', async () => {
+    const data = makeFakeAddAccountModel()
+    const { sut, getAccountByEmailRepositoryStub } = makeSut()
+    const spy = jest.spyOn(getAccountByEmailRepositoryStub, 'getByEmail')
+
+    await sut.add(data)
+
+    expect(spy).toHaveBeenCalledWith(data.email)
+  })
+
+  test('should return null if GetAccountByEmailRepository not returns null', async () => {
+    const data = makeFakeAddAccountModel()
+    const { sut, getAccountByEmailRepositoryStub } = makeSut()
+
+    jest.spyOn(getAccountByEmailRepositoryStub, 'getByEmail').mockReturnValueOnce(Promise.resolve(makeFakeAccount()))
+
+    const response = await sut.add(data)
+
+    expect(response).toBeNull()
   })
 
   test('should return an account on success', async () => {
