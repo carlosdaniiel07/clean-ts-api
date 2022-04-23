@@ -1,9 +1,9 @@
-import { MissingParamError, ServerError } from '../../errors'
+import { MissingParamError, ServerError } from '../../../errors'
 import { AddAccount, AccountModel, AddAccountModel, HttpRequest } from './signup-controller-protocols'
 import { SignUpController } from './signup-controller'
-import { badRequest, created, serverError } from '../../helpers/http-helper'
-import { Authentication, AuthenticationModel } from '../../../domain/usecases/authentication'
-import { Validation } from '../../protocols/validation'
+import { badRequest, created, serverError } from '../../../helpers/http-helper'
+import { Authentication, AuthenticationModel } from '../../../../domain/usecases/authentication'
+import { Validation } from '../../../protocols/validation'
 
 const makeFakeHttpRequest = (): HttpRequest => ({
   body: {

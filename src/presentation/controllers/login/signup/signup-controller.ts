@@ -1,6 +1,6 @@
-import { Authentication } from '../../../domain/usecases/authentication'
-import { badRequest, created, serverError } from '../../helpers/http-helper'
-import { Validation } from '../../protocols/validation'
+import { Authentication } from '../../../../domain/usecases/authentication'
+import { badRequest, created, serverError } from '../../../helpers/http-helper'
+import { Validation } from '../../../protocols/validation'
 import {
   AddAccount,
   Controller,
