@@ -25,41 +25,39 @@ const makeAccountModel = (): AccountModel => ({
 })
 
 describe('Jwt Adapter', () => {
-  test('should generate an JWT access token by account', () => {
-    const sut = makeSut()
-    const token = sut.generate(makeAccountModel())
+  describe('sign()', () => {
+    test('should generate an JWT access token by account', () => {
+      const sut = makeSut()
+      const token = sut.generate(makeAccountModel())
 
-    expect(token).toBe('jwt_token')
-  })
+      expect(token).toBe('jwt_token')
+    })
 
-  test('should call jsonwebtoken with correct values', () => {
-    const sut = makeSut()
-    const { name, email } = makeAccountModel()
-    const spy = jest.spyOn(jsonwebtoken, 'sign')
+    test('should call jsonwebtoken with correct values', () => {
+      const sut = makeSut()
+      const { name, email } = makeAccountModel()
+      const spy = jest.spyOn(jsonwebtoken, 'sign')
 
-    sut.generate(makeAccountModel())
+      sut.generate(makeAccountModel())
 
-    expect(spy).toHaveBeenCalledWith(
-      { name, email },
-      config.JWT_SECRET_KEY,
-      {
+      expect(spy).toHaveBeenCalledWith({ name, email }, config.JWT_SECRET_KEY, {
         issuer: 'clean-ts-api',
         audience: 'clean-ts-app',
         expiresIn: '6h',
         subject: email
-      }
-    )
-  })
-
-  test('should throw if jsonwebtoken trows', () => {
-    const sut = makeSut()
-
-    jest.spyOn(jsonwebtoken, 'sign').mockImplementationOnce(() => {
-      throw new Error()
+      })
     })
 
-    const action = (): string => sut.generate(makeAccountModel())
+    test('should throw if jsonwebtoken trows', () => {
+      const sut = makeSut()
 
-    expect(action).toThrow()
+      jest.spyOn(jsonwebtoken, 'sign').mockImplementationOnce(() => {
+        throw new Error()
+      })
+
+      const action = (): string => sut.generate(makeAccountModel())
+
+      expect(action).toThrow()
+    })
   })
 })

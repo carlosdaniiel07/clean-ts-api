@@ -16,59 +16,65 @@ describe('Account Mongo Repository', () => {
     await collection.deleteMany({})
   })
 
-  test('should create an account and return on success', async () => {
-    const account = await createAccount()
+  describe('add()', () => {
+    test('should create an account and return on success', async () => {
+      const account = await createAccount()
 
-    expect(account).toBeTruthy()
-    expect(account).toEqual<AccountModel>({
-      id: account.id,
-      name: 'any_name',
-      email: 'any_email',
-      password: 'any_password'
+      expect(account).toBeTruthy()
+      expect(account).toEqual<AccountModel>({
+        id: account.id,
+        name: 'any_name',
+        email: 'any_email',
+        password: 'any_password'
+      })
     })
   })
 
-  test('should update account access token', async () => {
-    const sut = makeSut()
-    const account = await createAccount()
-    const accessToken = 'any_accessToken'
+  describe('updateAccessToken()', () => {
+    test('should update account access token', async () => {
+      const sut = makeSut()
+      const account = await createAccount()
+      const accessToken = 'any_accessToken'
 
-    await sut.updateAccessToken(account.id, accessToken)
+      await sut.updateAccessToken(account.id, accessToken)
 
-    const collection = await MongoHelper.getCollection('accounts')
-    const updatedAccount = await collection.findOne({
-      accessToken
+      const collection = await MongoHelper.getCollection('accounts')
+      const updatedAccount = await collection.findOne({
+        accessToken
+      })
+
+      expect(updatedAccount).toBeTruthy()
+      expect(updatedAccount).toHaveProperty('accessToken', accessToken)
+    })
+  })
+
+  describe('getAll()', () => {
+    test('should get all accounts', async () => {
+      const sut = makeSut()
+      const account = await createAccount()
+      const response = await sut.getAll()
+
+      expect(response).toBeTruthy()
+      expect(response).toEqual([account])
+    })
+  })
+
+  describe('getByEmail()', () => {
+    test('should get an account by email', async () => {
+      const sut = makeSut()
+      const account = await createAccount()
+      const response = await sut.getByEmail(account.email)
+
+      expect(response).toBeTruthy()
+      expect(response).toEqual(account)
     })
 
-    expect(updatedAccount).toBeTruthy()
-    expect(updatedAccount).toHaveProperty('accessToken', accessToken)
-  })
+    test('should return null if account with specified email was not found', async () => {
+      const sut = makeSut()
+      const response = await sut.getByEmail('any_email')
 
-  test('should get all accounts', async () => {
-    const sut = makeSut()
-    const account = await createAccount()
-    const response = await sut.getAll()
-
-    expect(response).toBeTruthy()
-    expect(response).toEqual([
-      account
-    ])
-  })
-
-  test('should get an account by email', async () => {
-    const sut = makeSut()
-    const account = await createAccount()
-    const response = await sut.getByEmail(account.email)
-
-    expect(response).toBeTruthy()
-    expect(response).toEqual(account)
-  })
-
-  test('should return null if account with specified email was not found', async () => {
-    const sut = makeSut()
-    const response = await sut.getByEmail('any_email')
-
-    expect(response).toBeNull()
+      expect(response).toBeNull()
+    })
   })
 
   const createAccount = async (): Promise<AccountModel> => {
