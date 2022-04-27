@@ -1,6 +1,12 @@
 import { AccountModel } from '../../domain/models/account'
 import { JwtAdapter } from './jwt-adapter'
-import jsonwebtoken, { Secret, SignOptions } from 'jsonwebtoken'
+import jsonwebtoken, {
+  Jwt,
+  JwtPayload,
+  Secret,
+  SignOptions,
+  VerifyOptions
+} from 'jsonwebtoken'
 import config from '../../main/config/env'
 
 jest.mock('jsonwebtoken', () => ({
@@ -9,6 +15,13 @@ jest.mock('jsonwebtoken', () => ({
     secretOrPrivateKey: Secret,
     options?: SignOptions
   ): string {
+    return 'jwt_token'
+  },
+  verify (
+    token: string,
+    secretOrPublicKey: Secret,
+    options?: VerifyOptions
+  ): Jwt | JwtPayload | string {
     return 'jwt_token'
   }
 }))
@@ -58,6 +71,36 @@ describe('Jwt Adapter', () => {
       const action = (): string => sut.generate(makeAccountModel())
 
       expect(action).toThrow()
+    })
+  })
+
+  describe('verify()', () => {
+    test('should call verify with correct value', async () => {
+      const sut = makeSut()
+      const spy = jest.spyOn(jsonwebtoken, 'verify')
+
+      await sut.decrypt('any_token')
+
+      expect(spy).toHaveBeenCalledWith('any_token', config.JWT_SECRET_KEY)
+    })
+
+    test('should return a value on verify success', async () => {
+      const sut = makeSut()
+      const value = await sut.decrypt('any_token')
+
+      expect(value).toBe('jwt_token')
+    })
+
+    test('should throw if jsonwebtoken trows', async () => {
+      const sut = makeSut()
+
+      jest.spyOn(jsonwebtoken, 'verify').mockImplementationOnce(() => {
+        throw new Error()
+      })
+
+      const promise = sut.decrypt('any_token')
+
+      await expect(promise).rejects.toThrow()
     })
   })
 })
