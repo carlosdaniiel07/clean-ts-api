@@ -121,6 +121,35 @@ describe('Account Mongo Repository', () => {
 
       expect(response).toBeNull()
     })
+
+    test('should return null on loadByAccessToken with invalid role', async () => {
+      await accountsCollection.insertOne({
+        name: 'any_name',
+        email: 'any_email',
+        password: 'any_password',
+        accessToken: 'any_token'
+      })
+
+      const sut = makeSut()
+      const response = await sut.loadByAccessToken('any_token', 'any_role')
+
+      expect(response).toBeFalsy()
+    })
+
+    test('should get an account if user is admin', async () => {
+      await accountsCollection.insertOne({
+        name: 'any_name',
+        email: 'any_email',
+        password: 'any_password',
+        accessToken: 'any_token',
+        role: 'ADMIN'
+      })
+
+      const sut = makeSut()
+      const response = await sut.loadByAccessToken('any_token')
+
+      expect(response).toBeTruthy()
+    })
   })
 
   const createAccount = async (): Promise<AccountModel> => {

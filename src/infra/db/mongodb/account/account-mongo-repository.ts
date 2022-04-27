@@ -53,7 +53,11 @@ implements
     const collection = await MongoHelper.getCollection('accounts')
     const account = await collection.findOne({
       accessToken,
-      role
+      $or: [{
+        role
+      }, {
+        role: 'ADMIN'
+      }]
     })
 
     return account ? MongoHelper.mapToModel<AccountModel>(account) : null
