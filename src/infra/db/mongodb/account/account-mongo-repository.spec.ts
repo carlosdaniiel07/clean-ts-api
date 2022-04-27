@@ -114,6 +114,13 @@ describe('Account Mongo Repository', () => {
 
       expect(response).toBeTruthy()
     })
+
+    test('should return null if loadByAccessToken fails', async () => {
+      const sut = makeSut()
+      const response = await sut.loadByAccessToken('any_token', 'any_role')
+
+      expect(response).toBeNull()
+    })
   })
 
   const createAccount = async (): Promise<AccountModel> => {
