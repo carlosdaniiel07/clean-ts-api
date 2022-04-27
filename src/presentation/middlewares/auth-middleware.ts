@@ -29,7 +29,7 @@ export class AuthMiddleware implements Middleware {
       return {
         statusCode: 200,
         body: {
-          accountId: account.id
+          accountId: account.id.toString()
         }
       }
     } catch (err) {

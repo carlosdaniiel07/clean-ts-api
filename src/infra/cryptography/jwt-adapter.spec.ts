@@ -48,16 +48,16 @@ describe('Jwt Adapter', () => {
 
     test('should call jsonwebtoken with correct values', () => {
       const sut = makeSut()
-      const { name, email } = makeAccountModel()
+      const { id, name, email } = makeAccountModel()
       const spy = jest.spyOn(jsonwebtoken, 'sign')
 
       sut.generate(makeAccountModel())
 
-      expect(spy).toHaveBeenCalledWith({ name, email }, config.JWT_SECRET_KEY, {
+      expect(spy).toHaveBeenCalledWith({ id, name, email }, config.JWT_SECRET_KEY, {
         issuer: 'clean-ts-api',
         audience: 'clean-ts-app',
         expiresIn: '6h',
-        subject: email
+        subject: id
       })
     })
 

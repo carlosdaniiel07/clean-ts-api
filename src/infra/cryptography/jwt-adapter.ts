@@ -6,12 +6,12 @@ import config from '../../main/config/env'
 
 export class JwtAdapter implements TokenGenerator, Decrypter {
   generate (account: AccountModel): string {
-    const { name, email } = account
-    const token = sign({ name, email }, config.JWT_SECRET_KEY, {
+    const { id, name, email } = account
+    const token = sign({ id, name, email }, config.JWT_SECRET_KEY, {
       issuer: 'clean-ts-api',
       audience: 'clean-ts-app',
       expiresIn: '6h',
-      subject: email
+      subject: id.toString()
     })
 
     return token
