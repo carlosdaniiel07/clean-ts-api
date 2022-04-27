@@ -1,3 +1,4 @@
+import { Collection } from 'mongodb'
 import { AccountModel } from '../../../../domain/models/account'
 import { MongoHelper } from '../helpers/mongo-helper'
 import { AccountMongoRepository } from './account-mongo-repository'
@@ -7,18 +8,25 @@ const makeSut = (): AccountMongoRepository => {
 }
 
 describe('Account Mongo Repository', () => {
+  let accountsCollection: Collection
+
   beforeAll(async () => await MongoHelper.connect(global.__MONGO_URI__))
 
   afterAll(async () => await MongoHelper.disconnect())
 
   beforeEach(async () => {
-    const collection = await MongoHelper.getCollection('accounts')
-    await collection.deleteMany({})
+    accountsCollection = await MongoHelper.getCollection('accounts')
+    await accountsCollection.deleteMany({})
   })
 
   describe('add()', () => {
     test('should create an account and return on success', async () => {
-      const account = await createAccount()
+      const sut = makeSut()
+      const account = await sut.add({
+        name: 'any_name',
+        email: 'any_email',
+        password: 'any_password'
+      })
 
       expect(account).toBeTruthy()
       expect(account).toEqual<AccountModel>({
@@ -77,12 +85,46 @@ describe('Account Mongo Repository', () => {
     })
   })
 
+  describe('loadByAccessToken()', () => {
+    test('should get an account by access token', async () => {
+      await accountsCollection.insertOne({
+        name: 'any_name',
+        email: 'any_email',
+        password: 'any_password',
+        accessToken: 'any_token'
+      })
+
+      const sut = makeSut()
+      const response = await sut.loadByAccessToken('any_token')
+
+      expect(response).toBeTruthy()
+    })
+
+    test('should get an account by access token and role', async () => {
+      await accountsCollection.insertOne({
+        name: 'any_name',
+        email: 'any_email',
+        password: 'any_password',
+        accessToken: 'any_token',
+        role: 'any_role'
+      })
+
+      const sut = makeSut()
+      const response = await sut.loadByAccessToken('any_token', 'any_role')
+
+      expect(response).toBeTruthy()
+    })
+  })
+
   const createAccount = async (): Promise<AccountModel> => {
-    const sut = makeSut()
-    return await sut.add({
+    const account = {
       name: 'any_name',
       email: 'any_email',
       password: 'any_password'
-    })
+    }
+
+    await accountsCollection.insertOne(account)
+
+    return MongoHelper.mapToModel<AccountModel>(account)
   }
 })
