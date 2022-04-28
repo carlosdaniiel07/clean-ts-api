@@ -9,8 +9,7 @@
     "rootDir": "src"
   },
   "include": [
-    "src",
-    "jest.config.ts"
+    "src"
   ],
   "exclude": [
     "**/*.spec.ts",
