@@ -1,3 +1,4 @@
+import MockDate from 'mockdate'
 import { AddSurvey, AddSurveyModel } from '../../../../domain/usecases/add-survey'
 import { MissingParamError } from '../../../errors'
 import { badRequest, serverError } from '../../../helpers/http-helper'
@@ -55,6 +56,14 @@ const makeFakeHttpRequest = (): HttpRequest => ({
 })
 
 describe('AddSurvey controller', () => {
+  beforeAll(() => {
+    MockDate.set(new Date())
+  })
+
+  afterAll(() => {
+    MockDate.reset()
+  })
+
   test('should call Validation with correct value', async () => {
     const { sut, validation } = makeSut()
     const httpRequest = makeFakeHttpRequest()
@@ -96,7 +105,10 @@ describe('AddSurvey controller', () => {
 
     await sut.handle(httpRequest)
 
-    expect(spy).toHaveBeenCalledWith(httpRequest.body)
+    expect(spy).toHaveBeenCalledWith({
+      ...httpRequest.body,
+      date: new Date()
+    })
   })
 
   test('should return 500 if AddSurvey throws', async () => {

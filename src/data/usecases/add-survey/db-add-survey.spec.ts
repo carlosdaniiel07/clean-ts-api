@@ -1,3 +1,4 @@
+import MockDate from 'mockdate'
 import { SurveyModel } from '../../../domain/models/survey'
 import { AddSurveyModel } from '../../../domain/usecases/add-survey'
 import { AddSurveyRepository } from '../../protocols/db/survey/add-survey-repository'
@@ -38,10 +39,19 @@ const makeFakeAddSurveyModel = (): AddSurveyModel => ({
       answer: 'any_answer',
       image: 'any_image'
     }
-  ]
+  ],
+  date: new Date()
 })
 
 describe('DbAddSurvey usecase', () => {
+  beforeAll(() => {
+    MockDate.set(new Date())
+  })
+
+  afterAll(() => {
+    MockDate.reset()
+  })
+
   it('should call AddSurveyRepository with correct value', async () => {
     const { sut, addSurveyRepository } = makeSut()
     const addSurveyModel = makeFakeAddSurveyModel()

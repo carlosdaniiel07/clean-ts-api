@@ -1,3 +1,4 @@
+import MockDate from 'mockdate'
 import { MongoHelper } from '../helpers/mongo-helper'
 import { AddSurveyModel } from '../../../../domain/usecases/add-survey'
 import { SurveyMongoRepository } from './survey-mongo-repository'
@@ -13,7 +14,8 @@ const makeFakeAddSurveyModel = (): AddSurveyModel => ({
     {
       answer: 'other_answer'
     }
-  ]
+  ],
+  date: new Date()
 })
 
 const makeSut = (): SurveyMongoRepository => {
@@ -23,9 +25,15 @@ const makeSut = (): SurveyMongoRepository => {
 describe('Survey Mongo repository', () => {
   let collection: Collection
 
-  beforeAll(async () => await MongoHelper.connect(global.__MONGO_URI__))
+  beforeAll(async () => {
+    MockDate.set(new Date())
+    await MongoHelper.connect(global.__MONGO_URI__)
+  })
 
-  afterAll(async () => await MongoHelper.disconnect())
+  afterAll(async () => {
+    MockDate.reset()
+    await MongoHelper.disconnect()
+  })
 
   beforeEach(async () => {
     collection = await MongoHelper.getCollection('surveys')
@@ -49,7 +57,8 @@ describe('Survey Mongo repository', () => {
         {
           answer: 'other_answer'
         }
-      ]
+      ],
+      date: new Date()
     })
   })
 })
