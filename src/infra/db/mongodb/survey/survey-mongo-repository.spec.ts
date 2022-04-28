@@ -61,4 +61,28 @@ describe('Survey Mongo repository', () => {
       date: new Date()
     })
   })
+
+  test('should return a survey list', async () => {
+    const sut = makeSut()
+    const addSurveyModel = makeFakeAddSurveyModel()
+    const surveyId = await collection.insertOne(addSurveyModel)
+    const surveys = await sut.load()
+
+    expect(surveys).toEqual([
+      {
+        id: surveyId.insertedId,
+        question: 'any_question',
+        answers: [
+          {
+            answer: 'any_answer',
+            image: 'any_image'
+          },
+          {
+            answer: 'other_answer'
+          }
+        ],
+        date: new Date()
+      }
+    ])
+  })
 })
