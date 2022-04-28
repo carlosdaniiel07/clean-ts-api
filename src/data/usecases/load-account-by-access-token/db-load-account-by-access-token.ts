@@ -1,7 +1,7 @@
 import { LoadAccountByAccessToken } from '../../../domain/usecases/load-account-by-access-token'
 import { Decrypter } from '../../protocols/cryptography/decrypter'
 import { LoadAccountByAccessTokenRepository } from '../../protocols/db/account/load-account-by-access-token-repository'
-import { AccountModel } from '../add-account/db-add-account.protocols'
+import { AccountModel } from '../add-account/db-add-account-protocols'
 
 export class DbLoadAccountByAccessToken implements LoadAccountByAccessToken {
   constructor (

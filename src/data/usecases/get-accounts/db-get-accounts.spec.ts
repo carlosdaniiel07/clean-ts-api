@@ -1,5 +1,5 @@
 import { GetAccountsRepository } from '../../protocols/db/account/get-accounts-repository'
-import { AccountModel } from '../add-account/db-add-account.protocols'
+import { AccountModel } from '../add-account/db-add-account-protocols'
 import { DbGetAccounts } from './db-get-accounts'
 
 interface SutTypes {

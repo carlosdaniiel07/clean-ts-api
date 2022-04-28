@@ -3,7 +3,7 @@ import { GetAccountByEmailRepository } from '../../protocols/db/account/get-acco
 import { HashComparer } from '../../protocols/cryptography/hash'
 import { TokenGenerator } from '../../protocols/cryptography/token-generator'
 import { UpdateAccessTokenRepository } from '../../protocols/db/account/update-access-token-repository'
-import { AccountModel } from '../add-account/db-add-account.protocols'
+import { AccountModel } from '../add-account/db-add-account-protocols'
 import { DbAuthentication } from './db-authentication'
 
 const makeAuthenticationModel = (): AuthenticationModel => ({
