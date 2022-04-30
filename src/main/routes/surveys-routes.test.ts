@@ -6,6 +6,52 @@ import { sign } from 'jsonwebtoken'
 import config from '../config/env'
 import { AddSurveyModel } from '../../domain/usecases/add-survey'
 
+const makeAddSurveyModel = (): AddSurveyModel => ({
+  question: 'Qual a sua linguagem de programação preferida?',
+  answers: [
+    {
+      image: 'logo_csharp.png',
+      answer: 'C#'
+    },
+    {
+      answer: 'Type Script'
+    }
+  ],
+  date: new Date(2022, 4, 29, 23, 57, 20)
+})
+
+const createFakeUserAndGenerateAccessToken = async (
+  accountCollection: Collection
+): Promise<string> => {
+  const account = await accountCollection.insertOne({
+    name: 'Carlos',
+    email: 'carlos@email.com',
+    password: 'any_password',
+    role: 'ADMIN'
+  })
+  const accessToken = sign(
+    {
+      id: account.insertedId.toString(),
+      name: 'Carlos',
+      email: 'carlos@email.com'
+    },
+    config.JWT_SECRET_KEY
+  )
+
+  await accountCollection.updateOne(
+    {
+      _id: account.insertedId
+    },
+    {
+      $set: {
+        accessToken
+      }
+    }
+  )
+
+  return accessToken
+}
+
 describe('POST /surveys', () => {
   let surveyCollection: Collection
   let accountCollection: Collection
@@ -25,63 +71,19 @@ describe('POST /surveys', () => {
   test('should return 401 on add survey without access token', async () => {
     await request(app)
       .post('/api/surveys')
-      .send({
-        question: 'Qual a sua linguagem de programação preferida?',
-        answers: [
-          {
-            image: 'logo_csharp.png',
-            answer: 'C#'
-          },
-          {
-            answer: 'Type Script'
-          }
-        ]
-      })
+      .send(makeAddSurveyModel())
       .expect(401)
   })
 
   test('should return 201 on add survey with valid access token', async () => {
-    const account = await accountCollection.insertOne({
-      name: 'Carlos',
-      email: 'carlos@email.com',
-      password: 'any_password',
-      role: 'ADMIN'
-    })
-    const accessToken = sign(
-      {
-        id: account.insertedId.toString(),
-        name: 'Carlos',
-        email: 'carlos@email.com'
-      },
-      config.JWT_SECRET_KEY
-    )
-
-    await accountCollection.updateOne(
-      {
-        _id: account.insertedId
-      },
-      {
-        $set: {
-          accessToken
-        }
-      }
+    const accessToken = await createFakeUserAndGenerateAccessToken(
+      accountCollection
     )
 
     await request(app)
       .post('/api/surveys')
       .set('Authorization', `Bearer ${accessToken}`)
-      .send({
-        question: 'Qual a sua linguagem de programação preferida?',
-        answers: [
-          {
-            image: 'logo_csharp.png',
-            answer: 'C#'
-          },
-          {
-            answer: 'Type Script'
-          }
-        ]
-      })
+      .send(makeAddSurveyModel())
       .expect(201)
   })
 })
@@ -107,29 +109,8 @@ describe('GET /surveys', () => {
   })
 
   test('should return 204 on list surveys with valid access token', async () => {
-    const account = await accountCollection.insertOne({
-      name: 'Carlos',
-      email: 'carlos@email.com',
-      password: 'any_password'
-    })
-    const accessToken = sign(
-      {
-        id: account.insertedId.toString(),
-        name: 'Carlos',
-        email: 'carlos@email.com'
-      },
-      config.JWT_SECRET_KEY
-    )
-
-    await accountCollection.updateOne(
-      {
-        _id: account.insertedId
-      },
-      {
-        $set: {
-          accessToken
-        }
-      }
+    const accessToken = await createFakeUserAndGenerateAccessToken(
+      accountCollection
     )
 
     await request(app)
@@ -140,46 +121,11 @@ describe('GET /surveys', () => {
   })
 
   test('should return 200 on list surveys with valid access token', async () => {
-    const account = await accountCollection.insertOne({
-      name: 'Carlos',
-      email: 'carlos@email.com',
-      password: 'any_password'
-    })
-    const accessToken = sign(
-      {
-        id: account.insertedId.toString(),
-        name: 'Carlos',
-        email: 'carlos@email.com'
-      },
-      config.JWT_SECRET_KEY
+    const accessToken = await createFakeUserAndGenerateAccessToken(
+      accountCollection
     )
 
-    await accountCollection.updateOne(
-      {
-        _id: account.insertedId
-      },
-      {
-        $set: {
-          accessToken
-        }
-      }
-    )
-
-    const addSurvey: AddSurveyModel = {
-      question: 'Qual a sua linguagem de programação preferida?',
-      answers: [
-        {
-          image: 'logo_csharp.png',
-          answer: 'C#'
-        },
-        {
-          answer: 'Type Script'
-        }
-      ],
-      date: new Date(2022, 4, 29, 23, 57, 20)
-    }
-
-    await surveyCollection.insertOne(addSurvey)
+    await surveyCollection.insertOne(makeAddSurveyModel())
 
     const response = await request(app)
       .get('/api/surveys')
