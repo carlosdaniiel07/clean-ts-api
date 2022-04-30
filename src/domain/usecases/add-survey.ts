@@ -1,13 +1,6 @@
-export type AddSurveyModel = {
-  question: string
-  answers: AddSurveyAnswerModel[]
-  date: Date
-}
+import { SurveyModel } from '~/domain/models/survey'
 
-export type AddSurveyAnswerModel = {
-  answer: string
-  image?: string
-}
+export type AddSurveyModel = Omit<SurveyModel, 'id'>
 
 export interface AddSurvey {
   add: (data: AddSurveyModel) => Promise<void>
