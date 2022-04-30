@@ -3,7 +3,7 @@ import { GetAccounts } from '~/domain/usecases/get-accounts'
 import { ServerError } from '~/presentation/errors'
 import { AccountsController } from './accounts-controller'
 
-interface SutTypes {
+type SutTypes = {
   sut: AccountsController
   getAccounts: GetAccounts
 }

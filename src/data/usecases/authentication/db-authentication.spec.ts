@@ -18,7 +18,7 @@ const makeAccount = (): AccountModel => ({
   password: 'any_password'
 })
 
-interface SutTypes {
+type SutTypes = {
   sut: DbAuthentication
   getAccountByEmailRepository: GetAccountByEmailRepository
   updateAccessTokenRepository: UpdateAccessTokenRepository

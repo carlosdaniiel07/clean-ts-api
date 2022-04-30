@@ -2,7 +2,7 @@ import { GetAccountsRepository } from '~/data/protocols/db/account/get-accounts-
 import { AccountModel } from '~/domain/models/account'
 import { DbGetAccounts } from './db-get-accounts'
 
-interface SutTypes {
+type SutTypes = {
   sut: DbGetAccounts
   getAccountsRepository: GetAccountsRepository
 }

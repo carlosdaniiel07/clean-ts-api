@@ -9,7 +9,7 @@ import {
   ok
 } from '~/presentation/helpers/http-helper'
 
-interface SutTypes {
+type SutTypes = {
   loadAccountByAccessToken: LoadAccountByAccessToken
   sut: AuthMiddleware
 }

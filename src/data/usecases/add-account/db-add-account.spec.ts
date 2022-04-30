@@ -15,7 +15,7 @@ const makeFakeAddAccountModel = (): AddAccountModel => ({
   password: 'valid_password'
 })
 
-interface SutTypes {
+type SutTypes = {
   encrypterStub: Encrypter
   addAccountRepositoryStub: AddAccountRepository
   getAccountByEmailRepositoryStub: GetAccountByEmailRepository

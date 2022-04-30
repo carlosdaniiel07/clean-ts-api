@@ -2,7 +2,7 @@ import { Collection } from 'mongodb'
 import { MongoHelper } from '~/infra/db/mongodb/helpers/mongo-helper'
 import { LogMongoRepository } from './log-mongo-repository'
 
-interface SutTypes {
+type SutTypes = {
   sut: LogMongoRepository
 }
 

@@ -7,7 +7,7 @@ import { makeSignUpValidation } from './signup-validation-factory'
 
 jest.mock('../../../../validation/validators/validation-composite')
 
-interface SutTypes {
+type SutTypes = {
   emailValidator: EmailValidator
 }
 

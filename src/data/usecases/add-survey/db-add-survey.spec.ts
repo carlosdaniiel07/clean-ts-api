@@ -4,7 +4,7 @@ import { SurveyModel } from '~/domain/models/survey'
 import { AddSurveyModel } from '~/domain/usecases/add-survey'
 import { DbAddSurvey } from './db-add-survey'
 
-interface SutTypes {
+type SutTypes = {
   addSurveyRepository: AddSurveyRepository
   sut: DbAddSurvey
 }

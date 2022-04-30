@@ -4,7 +4,7 @@ import { serverError, noContent, ok } from '~/presentation/helpers/http-helper'
 import { HttpRequest } from '~/presentation/protocols'
 import { LoadSurveysController } from './load-surveys-controller'
 
-interface SutTypes {
+type SutTypes = {
   loadSurveys: LoadSurveys
   sut: LoadSurveysController
 }

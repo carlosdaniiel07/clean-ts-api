@@ -5,7 +5,7 @@ import { badRequest, serverError } from '~/presentation/helpers/http-helper'
 import { Validation, HttpRequest } from '~/presentation/protocols'
 import { AddSurveyController } from './add-survey-controller'
 
-interface SutTypes {
+type SutTypes = {
   validation: Validation
   addSurvey: AddSurvey
   sut: AddSurveyController
