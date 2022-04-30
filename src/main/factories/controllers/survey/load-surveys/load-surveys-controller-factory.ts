@@ -3,7 +3,7 @@ import { Controller } from '../../../../../presentation/protocols'
 import { makeLogControllerDecorator } from '../../../decorators/log-controller-decorator-factory'
 import { makeDbLoadSurveys } from '../../../usecases/db-load-surveys-factory'
 
-export const makeListSurveysController = (): Controller => {
-  const listSurveysController = new LoadSurveysController(makeDbLoadSurveys())
-  return makeLogControllerDecorator(listSurveysController)
+export const makeLoadSurveysController = (): Controller => {
+  const loadSurveysController = new LoadSurveysController(makeDbLoadSurveys())
+  return makeLogControllerDecorator(loadSurveysController)
 }
