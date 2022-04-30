@@ -66,7 +66,7 @@ describe('Survey Mongo repository', () => {
     const sut = makeSut()
     const addSurveyModel = makeFakeAddSurveyModel()
     const surveyId = await collection.insertOne(addSurveyModel)
-    const surveys = await sut.load()
+    const surveys = await sut.loadAll()
 
     expect(surveys).toEqual([
       {

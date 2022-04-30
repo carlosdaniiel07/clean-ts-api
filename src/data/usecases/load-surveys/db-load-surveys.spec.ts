@@ -9,7 +9,7 @@ interface SutTypes {
 
 const makeLoadSurveysRepository = (): LoadSurveysRepository => {
   class LoadSurveysRepositoryStub implements LoadSurveysRepository {
-    async load (): Promise<SurveyModel[]> {
+    async loadAll (): Promise<SurveyModel[]> {
       const surveys: SurveyModel[] = [makeSurveyModel()]
       return await Promise.resolve(surveys)
     }
@@ -43,7 +43,7 @@ const makeSurveyModel = (): SurveyModel => ({
 describe('DbLoadSurveys usecase', () => {
   test('should call LoadSurveysRepository', async () => {
     const { sut, loadSurveysRepository } = makeSut()
-    const spy = jest.spyOn(loadSurveysRepository, 'load')
+    const spy = jest.spyOn(loadSurveysRepository, 'loadAll')
 
     await sut.load()
 
@@ -53,7 +53,7 @@ describe('DbLoadSurveys usecase', () => {
   test('should throw if LoadSurveysRepository throws', async () => {
     const { sut, loadSurveysRepository } = makeSut()
 
-    jest.spyOn(loadSurveysRepository, 'load').mockImplementationOnce(() => {
+    jest.spyOn(loadSurveysRepository, 'loadAll').mockImplementationOnce(() => {
       throw new Error('any_error')
     })
 
