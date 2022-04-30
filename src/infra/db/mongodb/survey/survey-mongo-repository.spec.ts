@@ -85,4 +85,11 @@ describe('Survey Mongo repository', () => {
       }
     ])
   })
+
+  test('should return a empty list', async () => {
+    const sut = makeSut()
+    const surveys = await sut.loadAll()
+
+    expect(surveys).toEqual([])
+  })
 })
