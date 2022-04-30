@@ -4,6 +4,7 @@ import { MongoHelper } from '../../infra/db/mongodb/helpers/mongo-helper'
 import { Collection } from 'mongodb'
 import { sign } from 'jsonwebtoken'
 import config from '../config/env'
+import { AddSurveyModel } from '../../domain/usecases/add-survey'
 
 describe('POST /surveys', () => {
   let surveyCollection: Collection
@@ -46,19 +47,25 @@ describe('POST /surveys', () => {
       password: 'any_password',
       role: 'ADMIN'
     })
-    const accessToken = sign({
-      id: account.insertedId.toString(),
-      name: 'Carlos',
-      email: 'carlos@email.com'
-    }, config.JWT_SECRET_KEY)
+    const accessToken = sign(
+      {
+        id: account.insertedId.toString(),
+        name: 'Carlos',
+        email: 'carlos@email.com'
+      },
+      config.JWT_SECRET_KEY
+    )
 
-    await accountCollection.updateOne({
-      _id: account.insertedId
-    }, {
-      $set: {
-        accessToken
+    await accountCollection.updateOne(
+      {
+        _id: account.insertedId
+      },
+      {
+        $set: {
+          accessToken
+        }
       }
-    })
+    )
 
     await request(app)
       .post('/api/surveys')
@@ -76,5 +83,110 @@ describe('POST /surveys', () => {
         ]
       })
       .expect(201)
+  })
+})
+
+describe('GET /surveys', () => {
+  let surveyCollection: Collection
+  let accountCollection: Collection
+
+  beforeAll(async () => await MongoHelper.connect(global.__MONGO_URI__))
+
+  afterAll(async () => await MongoHelper.disconnect())
+
+  beforeEach(async () => {
+    surveyCollection = await MongoHelper.getCollection('surveys')
+    accountCollection = await MongoHelper.getCollection('accounts')
+
+    await surveyCollection.deleteMany({})
+    await accountCollection.deleteMany({})
+  })
+
+  test('should return 401 on add survey without access token', async () => {
+    await request(app).get('/api/surveys').send().expect(401)
+  })
+
+  test('should return 204 on list surveys with valid access token', async () => {
+    const account = await accountCollection.insertOne({
+      name: 'Carlos',
+      email: 'carlos@email.com',
+      password: 'any_password'
+    })
+    const accessToken = sign(
+      {
+        id: account.insertedId.toString(),
+        name: 'Carlos',
+        email: 'carlos@email.com'
+      },
+      config.JWT_SECRET_KEY
+    )
+
+    await accountCollection.updateOne(
+      {
+        _id: account.insertedId
+      },
+      {
+        $set: {
+          accessToken
+        }
+      }
+    )
+
+    await request(app)
+      .get('/api/surveys')
+      .set('Authorization', `Bearer ${accessToken}`)
+      .send()
+      .expect(204)
+  })
+
+  test('should return 200 on list surveys with valid access token', async () => {
+    const account = await accountCollection.insertOne({
+      name: 'Carlos',
+      email: 'carlos@email.com',
+      password: 'any_password'
+    })
+    const accessToken = sign(
+      {
+        id: account.insertedId.toString(),
+        name: 'Carlos',
+        email: 'carlos@email.com'
+      },
+      config.JWT_SECRET_KEY
+    )
+
+    await accountCollection.updateOne(
+      {
+        _id: account.insertedId
+      },
+      {
+        $set: {
+          accessToken
+        }
+      }
+    )
+
+    const addSurvey: AddSurveyModel = {
+      question: 'Qual a sua linguagem de programação preferida?',
+      answers: [
+        {
+          image: 'logo_csharp.png',
+          answer: 'C#'
+        },
+        {
+          answer: 'Type Script'
+        }
+      ],
+      date: new Date(2022, 4, 29, 23, 57, 20)
+    }
+
+    await surveyCollection.insertOne(addSurvey)
+
+    const response = await request(app)
+      .get('/api/surveys')
+      .set('Authorization', `Bearer ${accessToken}`)
+      .send()
+
+    expect(response.status).toBe(200)
+    expect(response.body).toBeTruthy()
   })
 })

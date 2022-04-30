@@ -2,7 +2,7 @@ import request from 'supertest'
 import app from '../config/app'
 import { MongoHelper } from '../../infra/db/mongodb/helpers/mongo-helper'
 
-describe('Accounts routes', () => {
+describe('GET /accounts', () => {
   beforeAll(async () => await MongoHelper.connect(global.__MONGO_URI__))
 
   afterAll(async () => await MongoHelper.disconnect())
