@@ -5,7 +5,7 @@ import { RequiredFieldValidation } from '~/validation/validators/required-field-
 import { ValidationComposite } from '~/validation/validators/validation-composite'
 import { makeSignUpValidation } from './signup-validation-factory'
 
-jest.mock('../../../../validation/validators/validation-composite')
+jest.mock('~/validation/validators/validation-composite')
 
 type SutTypes = {
   emailValidator: EmailValidator
