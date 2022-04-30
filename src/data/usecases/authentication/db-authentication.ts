@@ -1,8 +1,11 @@
-import { Authentication, AuthenticationModel } from '../../../domain/usecases/authentication'
-import { GetAccountByEmailRepository } from '../../protocols/db/account/get-account-by-email-repository'
-import { HashComparer } from '../../protocols/cryptography/hash'
-import { TokenGenerator } from '../../protocols/cryptography/token-generator'
-import { UpdateAccessTokenRepository } from '../../protocols/db/account/update-access-token-repository'
+import { HashComparer } from '~/data/protocols/cryptography/hash'
+import { TokenGenerator } from '~/data/protocols/cryptography/token-generator'
+import { GetAccountByEmailRepository } from '~/data/protocols/db/account/get-account-by-email-repository'
+import { UpdateAccessTokenRepository } from '~/data/protocols/db/account/update-access-token-repository'
+import {
+  Authentication,
+  AuthenticationModel
+} from '~/domain/usecases/authentication'
 
 export class DbAuthentication implements Authentication {
   constructor (
@@ -20,7 +23,10 @@ export class DbAuthentication implements Authentication {
       throw new Error(`Account with email ${email} was not found`)
     }
 
-    const isValidPassword = await this.hashComparer.compare(password, account.password)
+    const isValidPassword = await this.hashComparer.compare(
+      password,
+      account.password
+    )
 
     if (!isValidPassword) {
       throw new Error('Invalid password')
@@ -28,7 +34,10 @@ export class DbAuthentication implements Authentication {
 
     const accessToken = this.tokenGenerator.generate(account)
 
-    await this.updateAccessTokenRepository.updateAccessToken(account.id, accessToken)
+    await this.updateAccessTokenRepository.updateAccessToken(
+      account.id,
+      accessToken
+    )
 
     return accessToken
   }

@@ -1,10 +1,10 @@
 import request from 'supertest'
-import app from '../config/app'
-import { MongoHelper } from '../../infra/db/mongodb/helpers/mongo-helper'
+import app from '~/main/config/app'
 import { Collection } from 'mongodb'
 import { sign } from 'jsonwebtoken'
-import config from '../config/env'
-import { AddSurveyModel } from '../../domain/usecases/add-survey'
+import { AddSurveyModel } from '~/domain/usecases/add-survey'
+import config from '~/main/config/env'
+import { MongoHelper } from '~/infra/db/mongodb/helpers/mongo-helper'
 
 const makeAddSurveyModel = (): AddSurveyModel => ({
   question: 'Qual a sua linguagem de programação preferida?',

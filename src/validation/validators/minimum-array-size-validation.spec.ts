@@ -1,4 +1,4 @@
-import { InvalidParamError } from '../../presentation/errors'
+import { InvalidParamError } from '~/presentation/errors'
 import { MinimumArraySizeValidation } from './minimum-array-size-validation'
 
 const makeSut = (): MinimumArraySizeValidation => {

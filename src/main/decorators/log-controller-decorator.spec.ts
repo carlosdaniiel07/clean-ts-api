@@ -1,7 +1,7 @@
-import { LogErrorRepository } from '../../data/protocols/db/log/log-error-repository'
-import { ServerError } from '../../presentation/errors'
-import { ok, serverError } from '../../presentation/helpers/http-helper'
-import { Controller, HttpRequest, HttpResponse } from '../../presentation/protocols'
+import { LogErrorRepository } from '~/data/protocols/db/log/log-error-repository'
+import { ServerError } from '~/presentation/errors'
+import { ok, serverError } from '~/presentation/helpers/http-helper'
+import { Controller, HttpRequest, HttpResponse } from '~/presentation/protocols'
 import { LogControllerDecorator } from './log-controller-decorator'
 
 const makeFakeHttpRequest = (): HttpRequest => ({
@@ -71,7 +71,9 @@ describe('LogController decorator', () => {
     const { sut, controller } = makeSut()
     const httpResponse: HttpResponse = ok(makeFakeHttpRequest())
 
-    jest.spyOn(controller, 'handle').mockReturnValue(Promise.resolve(httpResponse))
+    jest
+      .spyOn(controller, 'handle')
+      .mockReturnValue(Promise.resolve(httpResponse))
 
     const response = await sut.handle({
       body: null
@@ -85,7 +87,9 @@ describe('LogController decorator', () => {
     const error = makeFakeError()
     const spy = jest.spyOn(logErrorRepository, 'logError')
 
-    jest.spyOn(controller, 'handle').mockImplementation(async () => await Promise.resolve(error))
+    jest
+      .spyOn(controller, 'handle')
+      .mockImplementation(async () => await Promise.resolve(error))
 
     await sut.handle({
       body: null

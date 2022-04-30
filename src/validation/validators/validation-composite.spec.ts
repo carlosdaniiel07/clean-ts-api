@@ -1,4 +1,4 @@
-import { Validation } from '../../presentation/protocols/validation'
+import { Validation } from '~/presentation/protocols'
 import { ValidationComposite } from './validation-composite'
 
 interface SutTypes {
@@ -32,7 +32,9 @@ describe('Validation composite', () => {
       field: 'any_value'
     }
     const { sut, validations } = makeSut()
-    const spies = validations.map((validation) => jest.spyOn(validation, 'validate'))
+    const spies = validations.map((validation) =>
+      jest.spyOn(validation, 'validate')
+    )
 
     sut.validate(payload)
 
@@ -44,7 +46,9 @@ describe('Validation composite', () => {
   test('should return the first error if any validation fails', () => {
     const { sut, validations } = makeSut()
 
-    jest.spyOn(validations[1], 'validate').mockReturnValue(new Error('an error'))
+    jest
+      .spyOn(validations[1], 'validate')
+      .mockReturnValue(new Error('an error'))
 
     const response = sut.validate({
       field: 'any_value'

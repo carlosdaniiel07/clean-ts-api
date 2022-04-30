@@ -1,9 +1,21 @@
-import { MissingParamError, ServerError } from '../../../errors'
-import { AddAccount, AccountModel, AddAccountModel, HttpRequest } from './signup-controller-protocols'
+import {
+  AddAccount,
+  AccountModel,
+  AddAccountModel,
+  HttpRequest,
+  Validation
+} from './signup-controller-protocols'
 import { SignUpController } from './signup-controller'
-import { badRequest, created, serverError } from '../../../helpers/http-helper'
-import { Authentication, AuthenticationModel } from '../../../../domain/usecases/authentication'
-import { Validation } from '../../../protocols/validation'
+import {
+  Authentication,
+  AuthenticationModel
+} from '~/domain/usecases/authentication'
+import { MissingParamError, ServerError } from '~/presentation/errors'
+import {
+  serverError,
+  badRequest,
+  created
+} from '~/presentation/helpers/http-helper'
 
 const makeFakeHttpRequest = (): HttpRequest => ({
   body: {
@@ -62,7 +74,11 @@ const makeSut = (): SutTypes => {
   const addAccountStub = makeAddAccount()
   const authenticationStub = makeAuthentication()
   const validationStub = makeValidation()
-  const sut = new SignUpController(addAccountStub, authenticationStub, validationStub)
+  const sut = new SignUpController(
+    addAccountStub,
+    authenticationStub,
+    validationStub
+  )
 
   return {
     sut,
@@ -100,7 +116,9 @@ describe('SignUp controller', () => {
     const { sut, validationStub } = makeSut()
     const httpRequest = makeFakeHttpRequest()
 
-    jest.spyOn(validationStub, 'validate').mockReturnValue(new MissingParamError('any_error'))
+    jest
+      .spyOn(validationStub, 'validate')
+      .mockReturnValue(new MissingParamError('any_error'))
 
     const httpResponse = await sut.handle(httpRequest)
 

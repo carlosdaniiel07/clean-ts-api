@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
-import { HttpRequest, Middleware } from '../../../presentation/protocols'
+import { HttpRequest, Middleware } from '~/presentation/protocols'
 
 type ExpressMiddleware = (req: Request, res: Response, next: NextFunction) => void
 

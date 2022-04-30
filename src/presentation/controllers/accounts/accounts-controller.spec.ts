@@ -1,6 +1,6 @@
-import { GetAccounts } from '../../../domain/usecases/get-accounts'
-import { ServerError } from '../../errors'
-import { AccountModel } from '../login/signup/signup-controller-protocols'
+import { AccountModel } from '~/domain/models/account'
+import { GetAccounts } from '~/domain/usecases/get-accounts'
+import { ServerError } from '~/presentation/errors'
 import { AccountsController } from './accounts-controller'
 
 interface SutTypes {

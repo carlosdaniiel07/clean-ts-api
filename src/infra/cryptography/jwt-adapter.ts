@@ -1,8 +1,8 @@
 import { sign, verify } from 'jsonwebtoken'
-import { Decrypter } from '../../data/protocols/cryptography/decrypter'
-import { TokenGenerator } from '../../data/protocols/cryptography/token-generator'
-import { AccountModel } from '../../domain/models/account'
-import config from '../../main/config/env'
+import { Decrypter } from '~/data/protocols/cryptography/decrypter'
+import { TokenGenerator } from '~/data/protocols/cryptography/token-generator'
+import { AccountModel } from '~/domain/models/account'
+import config from '~/main/config/env'
 
 export class JwtAdapter implements TokenGenerator, Decrypter {
   generate (account: AccountModel): string {

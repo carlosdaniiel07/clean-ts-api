@@ -1,5 +1,11 @@
-import { GetAccountByEmailRepository } from '../../protocols/db/account/get-account-by-email-repository'
-import { AccountModel, AddAccount, AddAccountModel, AddAccountRepository, Encrypter } from './db-add-account-protocols'
+import { GetAccountByEmailRepository } from '~/data/protocols/db/account/get-account-by-email-repository'
+import {
+  AccountModel,
+  AddAccount,
+  AddAccountModel,
+  AddAccountRepository,
+  Encrypter
+} from './db-add-account-protocols'
 
 export class DbAddAccount implements AddAccount {
   constructor (
@@ -9,7 +15,9 @@ export class DbAddAccount implements AddAccount {
   ) {}
 
   async add (addAccount: AddAccountModel): Promise<AccountModel | null> {
-    const isEmailInUse = !!(await this.getAccountByEmailRepository.getByEmail(addAccount.email))
+    const isEmailInUse = !!(await this.getAccountByEmailRepository.getByEmail(
+      addAccount.email
+    ))
 
     if (isEmailInUse) {
       return null

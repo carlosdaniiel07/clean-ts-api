@@ -1,10 +1,12 @@
-import { Validation } from '../../presentation/protocols/validation'
+import { Validation } from '~/presentation/protocols'
 
 export class ValidationComposite implements Validation {
   constructor (private readonly validations: Validation[]) {}
 
   validate (data: any): Error | null {
-    const results = this.validations.map((validation) => validation.validate(data))
+    const results = this.validations.map((validation) =>
+      validation.validate(data)
+    )
     const error = results.find((result) => result)
 
     return error ?? null

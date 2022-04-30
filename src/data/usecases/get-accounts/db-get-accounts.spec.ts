@@ -1,5 +1,5 @@
-import { GetAccountsRepository } from '../../protocols/db/account/get-accounts-repository'
-import { AccountModel } from '../add-account/db-add-account-protocols'
+import { GetAccountsRepository } from '~/data/protocols/db/account/get-accounts-repository'
+import { AccountModel } from '~/domain/models/account'
 import { DbGetAccounts } from './db-get-accounts'
 
 interface SutTypes {
@@ -74,9 +74,11 @@ describe('DbGetAccounts usecase', () => {
   test('should throw if GetAccountsRepository throws', async () => {
     const { sut, getAccountsRepository } = makeSut()
 
-    jest.spyOn(getAccountsRepository, 'getAll').mockImplementationOnce(async () => {
-      return await Promise.reject(new Error())
-    })
+    jest
+      .spyOn(getAccountsRepository, 'getAll')
+      .mockImplementationOnce(async () => {
+        return await Promise.reject(new Error())
+      })
 
     const promise = sut.getAll()
 

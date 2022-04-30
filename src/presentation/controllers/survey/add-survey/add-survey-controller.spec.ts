@@ -1,8 +1,8 @@
 import MockDate from 'mockdate'
-import { AddSurvey, AddSurveyModel } from '../../../../domain/usecases/add-survey'
-import { MissingParamError } from '../../../errors'
-import { badRequest, serverError } from '../../../helpers/http-helper'
-import { HttpRequest, Validation } from '../../../protocols'
+import { AddSurvey, AddSurveyModel } from '~/domain/usecases/add-survey'
+import { MissingParamError } from '~/presentation/errors'
+import { badRequest, serverError } from '~/presentation/helpers/http-helper'
+import { Validation, HttpRequest } from '~/presentation/protocols'
 import { AddSurveyController } from './add-survey-controller'
 
 interface SutTypes {
@@ -78,7 +78,9 @@ describe('AddSurvey controller', () => {
     const { sut, validation } = makeSut()
     const httpRequest = makeFakeHttpRequest()
 
-    jest.spyOn(validation, 'validate').mockReturnValueOnce(new MissingParamError('any_param'))
+    jest
+      .spyOn(validation, 'validate')
+      .mockReturnValueOnce(new MissingParamError('any_param'))
 
     const response = await sut.handle(httpRequest)
 

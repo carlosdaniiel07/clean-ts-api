@@ -1,7 +1,7 @@
+import { Decrypter } from '~/data/protocols/cryptography/decrypter'
+import { LoadAccountByAccessTokenRepository } from '~/data/protocols/db/account/load-account-by-access-token-repository'
+import { AccountModel } from '~/domain/models/account'
 import { DbLoadAccountByAccessToken } from './db-load-account-by-access-token'
-import { Decrypter } from '../../protocols/cryptography/decrypter'
-import { LoadAccountByAccessTokenRepository } from '../../protocols/db/account/load-account-by-access-token-repository'
-import { AccountModel } from '../add-account/db-add-account-protocols'
 
 interface SutTypes {
   decrypter: Decrypter
@@ -116,9 +116,11 @@ describe('DbLoadAccountByAccessToken usecase', () => {
   test('should throw if LoadAccountByAccessTokenRepository throws', async () => {
     const { sut, loadAccountByAccessTokenRepository } = makeSut()
 
-    jest.spyOn(loadAccountByAccessTokenRepository, 'loadByAccessToken').mockImplementationOnce(() => {
-      throw new Error('any_error')
-    })
+    jest
+      .spyOn(loadAccountByAccessTokenRepository, 'loadByAccessToken')
+      .mockImplementationOnce(() => {
+        throw new Error('any_error')
+      })
 
     const promise = sut.load('any_token', 'any_role')
 

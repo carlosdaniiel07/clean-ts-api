@@ -1,4 +1,3 @@
-import { AccountModel } from '../../domain/models/account'
 import { JwtAdapter } from './jwt-adapter'
 import jsonwebtoken, {
   Jwt,
@@ -7,7 +6,8 @@ import jsonwebtoken, {
   SignOptions,
   VerifyOptions
 } from 'jsonwebtoken'
-import config from '../../main/config/env'
+import config from '~/main/config/env'
+import { AccountModel } from '~/domain/models/account'
 
 jest.mock('jsonwebtoken', () => ({
   sign (

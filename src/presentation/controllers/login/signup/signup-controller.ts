@@ -1,11 +1,15 @@
-import { Authentication } from '../../../../domain/usecases/authentication'
-import { badRequest, created, serverError } from '../../../helpers/http-helper'
-import { Validation } from '../../../protocols/validation'
+import { Authentication } from '~/domain/usecases/authentication'
+import {
+  badRequest,
+  created,
+  serverError
+} from '~/presentation/helpers/http-helper'
 import {
   AddAccount,
   Controller,
   HttpRequest,
-  HttpResponse
+  HttpResponse,
+  Validation
 } from './signup-controller-protocols'
 
 export class SignUpController implements Controller {

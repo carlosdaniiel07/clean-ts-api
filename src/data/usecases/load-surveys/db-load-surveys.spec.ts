@@ -1,6 +1,6 @@
+import { LoadSurveysRepository } from '~/data/protocols/db/survey/load-surveys-repository'
+import { SurveyModel } from '~/domain/models/survey'
 import { DbLoadSurveys } from './db-load-surveys'
-import { LoadSurveysRepository } from '../../protocols/db/survey/load-surveys-repository'
-import { SurveyModel } from '../../../domain/models/survey'
 
 interface SutTypes {
   loadSurveysRepository: LoadSurveysRepository
@@ -66,8 +66,6 @@ describe('DbLoadSurveys usecase', () => {
     const { sut } = makeSut()
     const response = await sut.load()
 
-    expect(response).toEqual([
-      makeSurveyModel()
-    ])
+    expect(response).toEqual([makeSurveyModel()])
   })
 })

@@ -1,9 +1,9 @@
-import { AuthenticationModel } from '../../../domain/usecases/authentication'
-import { GetAccountByEmailRepository } from '../../protocols/db/account/get-account-by-email-repository'
-import { HashComparer } from '../../protocols/cryptography/hash'
-import { TokenGenerator } from '../../protocols/cryptography/token-generator'
-import { UpdateAccessTokenRepository } from '../../protocols/db/account/update-access-token-repository'
-import { AccountModel } from '../add-account/db-add-account-protocols'
+import { HashComparer } from '~/data/protocols/cryptography/hash'
+import { TokenGenerator } from '~/data/protocols/cryptography/token-generator'
+import { GetAccountByEmailRepository } from '~/data/protocols/db/account/get-account-by-email-repository'
+import { UpdateAccessTokenRepository } from '~/data/protocols/db/account/update-access-token-repository'
+import { AccountModel } from '~/domain/models/account'
+import { AuthenticationModel } from '~/domain/usecases/authentication'
 import { DbAuthentication } from './db-authentication'
 
 const makeAuthenticationModel = (): AuthenticationModel => ({
@@ -71,7 +71,12 @@ const makeSut = (): SutTypes => {
   const updateAccessTokenRepository = makeUpdateAccessTokenRepository()
   const tokenGenerator = makeTokenGenerator()
   const hashComparer = makeHashComparer()
-  const sut = new DbAuthentication(getAccountByEmailRepository, updateAccessTokenRepository, tokenGenerator, hashComparer)
+  const sut = new DbAuthentication(
+    getAccountByEmailRepository,
+    updateAccessTokenRepository,
+    tokenGenerator,
+    hashComparer
+  )
 
   return {
     sut,
@@ -130,11 +135,15 @@ describe('DbAuthentication usecase', () => {
     const authentication = makeAuthenticationModel()
     const { sut, getAccountByEmailRepository } = makeSut()
 
-    jest.spyOn(getAccountByEmailRepository, 'getByEmail').mockReturnValue(Promise.resolve(null))
+    jest
+      .spyOn(getAccountByEmailRepository, 'getByEmail')
+      .mockReturnValue(Promise.resolve(null))
 
     const promise = sut.auth(authentication)
 
-    await expect(promise).rejects.toThrow(`Account with email ${authentication.email} was not found`)
+    await expect(promise).rejects.toThrow(
+      `Account with email ${authentication.email} was not found`
+    )
   })
 
   test('should throw error if password not matches', async () => {

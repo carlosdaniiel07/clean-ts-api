@@ -1,7 +1,11 @@
-import { LoadAccountByAccessToken } from '../../domain/usecases/load-account-by-access-token'
-import { AccessDeniedError } from '../errors'
-import { ok, serverError, unauthorized } from '../helpers/http-helper'
-import { HttpRequest, HttpResponse, Middleware } from '../protocols'
+import { LoadAccountByAccessToken } from '~/domain/usecases/load-account-by-access-token'
+import { AccessDeniedError } from '~/presentation/errors'
+import {
+  unauthorized,
+  ok,
+  serverError
+} from '~/presentation/helpers/http-helper'
+import { Middleware, HttpRequest, HttpResponse } from '~/presentation/protocols'
 
 export class AuthMiddleware implements Middleware {
   constructor (
@@ -20,7 +24,10 @@ export class AuthMiddleware implements Middleware {
         return unauthorized(new AccessDeniedError())
       }
 
-      const account = await this.loadAccountByAccessToken.load(accessToken, this.role)
+      const account = await this.loadAccountByAccessToken.load(
+        accessToken,
+        this.role
+      )
 
       if (!account) {
         return unauthorized(new AccessDeniedError())

@@ -1,9 +1,13 @@
-import { HttpRequest } from '../protocols'
+import { AccountModel } from '~/domain/models/account'
+import { LoadAccountByAccessToken } from '~/domain/usecases/load-account-by-access-token'
 import { AuthMiddleware } from './auth-middleware'
-import { ok, serverError, unauthorized } from '../helpers/http-helper'
-import { AccessDeniedError } from '../errors'
-import { LoadAccountByAccessToken } from '../../domain/usecases/load-account-by-access-token'
-import { AccountModel } from '../../domain/models/account'
+import { HttpRequest } from '~/presentation/protocols'
+import { AccessDeniedError } from '~/presentation/errors'
+import {
+  unauthorized,
+  serverError,
+  ok
+} from '~/presentation/helpers/http-helper'
 
 interface SutTypes {
   loadAccountByAccessToken: LoadAccountByAccessToken
@@ -12,7 +16,10 @@ interface SutTypes {
 
 const makeLoadAccountByAccessToken = (): LoadAccountByAccessToken => {
   class LoadAccountByAccessTokenStub implements LoadAccountByAccessToken {
-    async load (accessToken: string, role?: string): Promise<AccountModel | null> {
+    async load (
+      accessToken: string,
+      role?: string
+    ): Promise<AccountModel | null> {
       return await Promise.resolve({
         id: 'any_id',
         name: 'any_name',
@@ -67,7 +74,9 @@ describe('Auth middleware', () => {
     const { sut, loadAccountByAccessToken } = makeSut()
     const httpRequest = makeFakeHttpRequest()
 
-    jest.spyOn(loadAccountByAccessToken, 'load').mockReturnValueOnce(Promise.resolve(null))
+    jest
+      .spyOn(loadAccountByAccessToken, 'load')
+      .mockReturnValueOnce(Promise.resolve(null))
 
     const response = await sut.handle(httpRequest)
 
@@ -92,8 +101,10 @@ describe('Auth middleware', () => {
     const httpRequest = makeFakeHttpRequest()
     const response = await sut.handle(httpRequest)
 
-    expect(response).toEqual(ok({
-      accountId: 'any_id'
-    }))
+    expect(response).toEqual(
+      ok({
+        accountId: 'any_id'
+      })
+    )
   })
 })

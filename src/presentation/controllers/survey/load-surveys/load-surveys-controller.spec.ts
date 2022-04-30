@@ -1,8 +1,8 @@
-import { SurveyModel } from '../../../../domain/models/survey'
-import { LoadSurveys } from '../../../../domain/usecases/load-surveys'
-import { HttpRequest } from '../../../protocols'
+import { SurveyModel } from '~/domain/models/survey'
+import { LoadSurveys } from '~/domain/usecases/load-surveys'
+import { serverError, noContent, ok } from '~/presentation/helpers/http-helper'
+import { HttpRequest } from '~/presentation/protocols'
 import { LoadSurveysController } from './load-surveys-controller'
-import { ok, noContent, serverError } from '../../../helpers/http-helper'
 
 interface SutTypes {
   loadSurveys: LoadSurveys
