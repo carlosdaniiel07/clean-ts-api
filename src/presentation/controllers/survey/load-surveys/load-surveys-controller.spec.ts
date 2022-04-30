@@ -2,7 +2,7 @@ import { SurveyModel } from '../../../../domain/models/survey'
 import { LoadSurveys } from '../../../../domain/usecases/load-surveys'
 import { HttpRequest } from '../../../protocols'
 import { LoadSurveysController } from './load-surveys-controller'
-import { ok, serverError } from '../../../helpers/http-helper'
+import { ok, noContent, serverError } from '../../../helpers/http-helper'
 
 interface SutTypes {
   loadSurveys: LoadSurveys
@@ -56,7 +56,7 @@ describe('LoadSurveys controller', () => {
     expect(spy).toHaveBeenCalled()
   })
 
-  test('should returns 500 if LoadSurveys throws', async () => {
+  test('should return 500 if LoadSurveys throws', async () => {
     const { sut, loadSurveys } = makeSut()
 
     jest.spyOn(loadSurveys, 'load').mockImplementationOnce(() => {
@@ -66,6 +66,16 @@ describe('LoadSurveys controller', () => {
     const response = await sut.handle(makeFakeHttpRequest())
 
     expect(response).toEqual(serverError(new Error('any_error')))
+  })
+
+  test('should return 204 if LoadSurveys returns empty', async () => {
+    const { sut, loadSurveys } = makeSut()
+
+    jest.spyOn(loadSurveys, 'load').mockReturnValueOnce(Promise.resolve([]))
+
+    const response = await sut.handle(makeFakeHttpRequest())
+
+    expect(response).toEqual(noContent())
   })
 
   test('should return 200 and survey list', async () => {
