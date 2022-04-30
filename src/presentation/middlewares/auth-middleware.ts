@@ -1,6 +1,6 @@
 import { LoadAccountByAccessToken } from '../../domain/usecases/load-account-by-access-token'
 import { AccessDeniedError } from '../errors'
-import { serverError, unauthorized } from '../helpers/http-helper'
+import { ok, serverError, unauthorized } from '../helpers/http-helper'
 import { HttpRequest, HttpResponse, Middleware } from '../protocols'
 
 export class AuthMiddleware implements Middleware {
@@ -26,12 +26,9 @@ export class AuthMiddleware implements Middleware {
         return unauthorized(new AccessDeniedError())
       }
 
-      return {
-        statusCode: 200,
-        body: {
-          accountId: account.id.toString()
-        }
-      }
+      return ok({
+        accountId: account.id.toString()
+      })
     } catch (err) {
       return serverError(err)
     }
