@@ -18,7 +18,9 @@ export class JwtAdapter implements TokenGenerator, Decrypter {
   }
 
   async decrypt (value: string): Promise<string | null> {
-    const payload = verify(value, config.JWT_SECRET_KEY)
+    const payload = verify(value, config.JWT_SECRET_KEY, {
+      ignoreExpiration: true
+    })
     return await Promise.resolve(String(payload))
   }
 }

@@ -81,7 +81,9 @@ describe('Jwt Adapter', () => {
 
       await sut.decrypt('any_token')
 
-      expect(spy).toHaveBeenCalledWith('any_token', config.JWT_SECRET_KEY)
+      expect(spy).toHaveBeenCalledWith('any_token', config.JWT_SECRET_KEY, {
+        ignoreExpiration: true
+      })
     })
 
     test('should return a value on verify success', async () => {
