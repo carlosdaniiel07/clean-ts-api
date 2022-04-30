@@ -21,13 +21,14 @@ const makeAddSurveyModel = (): AddSurveyModel => ({
 })
 
 const createFakeUserAndGenerateAccessToken = async (
-  accountCollection: Collection
+  accountCollection: Collection,
+  role?: string
 ): Promise<string> => {
   const account = await accountCollection.insertOne({
     name: 'Carlos',
     email: 'carlos@email.com',
     password: 'any_password',
-    role: 'ADMIN'
+    role
   })
   const accessToken = sign(
     {
@@ -77,7 +78,8 @@ describe('POST /surveys', () => {
 
   test('should return 201 on add survey with valid access token', async () => {
     const accessToken = await createFakeUserAndGenerateAccessToken(
-      accountCollection
+      accountCollection,
+      'ADMIN'
     )
 
     await request(app)
