@@ -39,7 +39,7 @@ describe('SurveyResult Mongo repository', () => {
 
       await collection.insertOne(makeFakeSaveSurveyResultModel())
 
-      const survey = await sut.loadResultByAccountAndSurvey(
+      const survey = await sut.loadByAccountAndSurvey(
         'any_accountId',
         'any_surveyId'
       )
@@ -56,7 +56,7 @@ describe('SurveyResult Mongo repository', () => {
 
     test('should return null if specific survey result not exists', async () => {
       const sut = makeSut()
-      const survey = await sut.loadResultByAccountAndSurvey(
+      const survey = await sut.loadByAccountAndSurvey(
         'any_accountId',
         'any_surveyId'
       )

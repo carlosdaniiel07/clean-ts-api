@@ -17,7 +17,7 @@ const makeLoadSurveyResultByAccountAndSurveyRepository =
   (): LoadSurveyResultByAccountAndSurveyRepository => {
     class LoadSurveyResultByAccountAndSurveyRepositoryStub
     implements LoadSurveyResultByAccountAndSurveyRepository {
-      async loadResultByAccountAndSurvey (
+      async loadByAccountAndSurvey (
         id: string
       ): Promise<SurveyResultModel | null> {
         return await Promise.resolve(null)
@@ -29,7 +29,7 @@ const makeLoadSurveyResultByAccountAndSurveyRepository =
 
 const makeAddSurveyResultRepository = (): AddSurveyResultRepository => {
   class AddSurveyResultRepositoryStub implements AddSurveyResultRepository {
-    async addResult (data: SaveSurveyResultModel): Promise<void> {
+    async add (data: SaveSurveyResultModel): Promise<void> {
       return await Promise.resolve()
     }
   }
@@ -40,7 +40,7 @@ const makeAddSurveyResultRepository = (): AddSurveyResultRepository => {
 const makeUpdateSurveyResultRepository = (): UpdateSurveyResultRepository => {
   class UpdateSurveyResultRepositoryStub
   implements UpdateSurveyResultRepository {
-    async updateResult (id: string, data: SaveSurveyResultModel): Promise<void> {
+    async update (id: string, data: SaveSurveyResultModel): Promise<void> {
       return await Promise.resolve()
     }
   }
@@ -95,7 +95,7 @@ describe('DbSaveSurveyResult usecase', () => {
     const { sut, loadSurveyResultByAccountAndSurveyRepository: loadSurveyResultByAccountAndSurvey } = makeSut()
     const spy = jest.spyOn(
       loadSurveyResultByAccountAndSurvey,
-      'loadResultByAccountAndSurvey'
+      'loadByAccountAndSurvey'
     )
     const saveSurveyResultModel = makeFakeSaveSurveyResultModel()
 
@@ -109,7 +109,7 @@ describe('DbSaveSurveyResult usecase', () => {
 
   test('should call AddSurveyResultRepository with correct value when LoadSurveyResultByIdRepository returns null', async () => {
     const { sut, addSurveyResultRepository } = makeSut()
-    const spy = jest.spyOn(addSurveyResultRepository, 'addResult')
+    const spy = jest.spyOn(addSurveyResultRepository, 'add')
     const saveSurveyResultModel = makeFakeSaveSurveyResultModel()
 
     await sut.save(saveSurveyResultModel)
@@ -123,14 +123,14 @@ describe('DbSaveSurveyResult usecase', () => {
       loadSurveyResultByAccountAndSurveyRepository: loadSurveyResultByAccountAndSurvey,
       updateSurveyResultRepository
     } = makeSut()
-    const spy = jest.spyOn(updateSurveyResultRepository, 'updateResult')
+    const spy = jest.spyOn(updateSurveyResultRepository, 'update')
     const saveSurveyResultModel: SaveSurveyResultModel = {
       ...makeFakeSaveSurveyResultModel(),
       answer: 'new_answer'
     }
 
     jest
-      .spyOn(loadSurveyResultByAccountAndSurvey, 'loadResultByAccountAndSurvey')
+      .spyOn(loadSurveyResultByAccountAndSurvey, 'loadByAccountAndSurvey')
       .mockReturnValueOnce(Promise.resolve(makeFakeSurveyResultModel()))
 
     await sut.save(saveSurveyResultModel)
@@ -142,7 +142,7 @@ describe('DbSaveSurveyResult usecase', () => {
     const { sut, loadSurveyResultByAccountAndSurveyRepository: loadSurveyResultByAccountAndSurvey } = makeSut()
 
     jest
-      .spyOn(loadSurveyResultByAccountAndSurvey, 'loadResultByAccountAndSurvey')
+      .spyOn(loadSurveyResultByAccountAndSurvey, 'loadByAccountAndSurvey')
       .mockImplementationOnce(() => {
         throw new Error('any_error')
       })
@@ -156,7 +156,7 @@ describe('DbSaveSurveyResult usecase', () => {
     const { sut, addSurveyResultRepository } = makeSut()
 
     jest
-      .spyOn(addSurveyResultRepository, 'addResult')
+      .spyOn(addSurveyResultRepository, 'add')
       .mockImplementationOnce(() => {
         throw new Error('any_error')
       })
@@ -174,10 +174,10 @@ describe('DbSaveSurveyResult usecase', () => {
     } = makeSut()
 
     jest
-      .spyOn(loadSurveyResultByAccountAndSurvey, 'loadResultByAccountAndSurvey')
+      .spyOn(loadSurveyResultByAccountAndSurvey, 'loadByAccountAndSurvey')
       .mockReturnValueOnce(Promise.resolve(makeFakeSurveyResultModel()))
     jest
-      .spyOn(updateSurveyResultRepository, 'updateResult')
+      .spyOn(updateSurveyResultRepository, 'update')
       .mockImplementationOnce(() => {
         throw new Error('any_error')
       })

@@ -16,17 +16,17 @@ export class DbSaveSurveyResult implements SaveSurveyResult {
   async save (data: SaveSurveyResultModel): Promise<void> {
     const { accountId, surveyId } = data
     const surveyResult =
-      await this.loadSurveyResultByAccountAndSurveyRepository.loadResultByAccountAndSurvey(
+      await this.loadSurveyResultByAccountAndSurveyRepository.loadByAccountAndSurvey(
         accountId,
         surveyId
       )
     const alreadyAnswered = !!surveyResult
 
     alreadyAnswered &&
-      (await this.updateSurveyResultRepository.updateResult(
+      (await this.updateSurveyResultRepository.update(
         surveyResult.id,
         data
       ))
-    !alreadyAnswered && (await this.addSurveyResultRepository.addResult(data))
+    !alreadyAnswered && (await this.addSurveyResultRepository.add(data))
   }
 }

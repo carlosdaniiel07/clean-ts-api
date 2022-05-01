@@ -4,7 +4,7 @@ import { MongoHelper } from '~/infra/db/mongodb/helpers/mongo-helper'
 
 export class SurveyResultMongoRepository
 implements LoadSurveyResultByAccountAndSurveyRepository {
-  async loadResultByAccountAndSurvey (
+  async loadByAccountAndSurvey (
     accountId: string,
     surveyId: string
   ): Promise<SurveyResultModel | null> {
