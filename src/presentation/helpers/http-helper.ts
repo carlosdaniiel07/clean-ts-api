@@ -11,7 +11,7 @@ export const ok = (body: any): HttpResponse => ({
   body
 })
 
-export const created = (body: any): HttpResponse => ({
+export const created = (body?: any): HttpResponse => ({
   statusCode: 201,
   body
 })

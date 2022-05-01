@@ -1,5 +1,5 @@
 import { AddSurvey } from '~/domain/usecases/add-survey'
-import { badRequest, serverError } from '~/presentation/helpers/http-helper'
+import { badRequest, created, serverError } from '~/presentation/helpers/http-helper'
 import {
   Controller,
   HttpRequest,
@@ -30,10 +30,7 @@ export class AddSurveyController implements Controller {
         date: new Date()
       })
 
-      return {
-        statusCode: 201,
-        body: null
-      }
+      return created()
     } catch (err) {
       return serverError(err)
     }
