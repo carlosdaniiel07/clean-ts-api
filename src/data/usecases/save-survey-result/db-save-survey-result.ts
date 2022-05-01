@@ -1,6 +1,6 @@
-import { AddSurveyResultRepository } from '~/data/protocols/db/survey/add-survey-result-repository'
-import { LoadSurveyResultByAccountAndSurveyRepository } from '~/data/protocols/db/survey/load-survey-result-by-account-and-survey'
-import { UpdateSurveyResultRepository } from '~/data/protocols/db/survey/update-survey-result-repository'
+import { AddSurveyResultRepository } from '~/data/protocols/db/survey-result/add-survey-result-repository'
+import { LoadSurveyResultByAccountAndSurveyRepository } from '~/data/protocols/db/survey-result/load-survey-result-by-account-and-survey'
+import { UpdateSurveyResultRepository } from '~/data/protocols/db/survey-result/update-survey-result-repository'
 import {
   SaveSurveyResult,
   SaveSurveyResultModel
