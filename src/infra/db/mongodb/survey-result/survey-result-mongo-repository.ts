@@ -1,9 +1,15 @@
+import { AddSurveyResultRepository } from '~/data/protocols/db/survey-result/add-survey-result-repository'
 import { LoadSurveyResultByAccountAndSurveyRepository } from '~/data/protocols/db/survey-result/load-survey-result-by-account-and-survey'
+import { UpdateSurveyResultRepository } from '~/data/protocols/db/survey-result/update-survey-result-repository'
 import { SurveyResultModel } from '~/domain/models/survey-result'
+import { SaveSurveyResultModel } from '~/domain/usecases/save-survey-result'
 import { MongoHelper } from '~/infra/db/mongodb/helpers/mongo-helper'
 
 export class SurveyResultMongoRepository
-implements LoadSurveyResultByAccountAndSurveyRepository {
+implements
+    LoadSurveyResultByAccountAndSurveyRepository,
+    AddSurveyResultRepository,
+    UpdateSurveyResultRepository {
   async loadByAccountAndSurvey (
     accountId: string,
     surveyId: string
@@ -17,5 +23,22 @@ implements LoadSurveyResultByAccountAndSurveyRepository {
     return surveyResult
       ? MongoHelper.mapToModel<SurveyResultModel>(surveyResult)
       : null
+  }
+
+  async add (data: SaveSurveyResultModel): Promise<void> {
+    const collection = await MongoHelper.getCollection('survey_results')
+    await collection.insertOne(data)
+  }
+
+  async update (id: string, data: SaveSurveyResultModel): Promise<void> {
+    const collection = await MongoHelper.getCollection('survey_results')
+    await collection.updateOne(
+      {
+        _id: id
+      },
+      {
+        $set: data
+      }
+    )
   }
 }
