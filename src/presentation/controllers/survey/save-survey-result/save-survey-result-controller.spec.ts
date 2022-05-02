@@ -159,7 +159,10 @@ describe('SaveSurveyResult controller', () => {
       .spyOn(loadSurveyById, 'loadById')
       .mockReturnValueOnce(Promise.resolve(null))
 
-    const httpResponse = await sut.handle(makeFakeHttpRequest())
+    const httpResponse = await sut.handle({
+      ...makeFakeHttpRequest(),
+      params: undefined
+    })
 
     expect(httpResponse).toEqual(
       notFound(new NotFoundError('Survey not found'))
