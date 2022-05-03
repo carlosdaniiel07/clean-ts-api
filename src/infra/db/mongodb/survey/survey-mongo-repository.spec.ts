@@ -3,6 +3,7 @@ import { MongoHelper } from '~/infra/db/mongodb/helpers/mongo-helper'
 import { SurveyMongoRepository } from './survey-mongo-repository'
 import { Collection } from 'mongodb'
 import { AddSurveyModel } from '~/domain/usecases/add-survey'
+import { SurveyModel } from '~/domain/models/survey'
 
 const makeFakeAddSurveyModel = (): AddSurveyModel => ({
   question: 'any_question',
@@ -67,13 +68,12 @@ describe('Survey Mongo repository', () => {
   describe('loadAll()', () => {
     test('should return a survey list', async () => {
       const sut = makeSut()
-      const addSurveyModel = makeFakeAddSurveyModel()
-      const surveyId = await collection.insertOne(addSurveyModel)
+      const survey = await createSurvey()
       const surveys = await sut.loadAll()
 
       expect(surveys).toEqual([
         {
-          id: surveyId.insertedId,
+          id: survey.id,
           question: 'any_question',
           answers: [
             {
@@ -96,4 +96,29 @@ describe('Survey Mongo repository', () => {
       expect(surveys).toEqual([])
     })
   })
+
+  describe('loadById()', () => {
+    test('should return a survey by id', async () => {
+      const sut = makeSut()
+      const createdSurvey = await createSurvey()
+      const survey = await sut.loadById(createdSurvey.id)
+
+      expect(survey).toBeTruthy()
+    })
+
+    test('should return null when survey not exists', async () => {
+      const sut = makeSut()
+      const invalidId = '507f1f77bcf86cd799439011'
+      const survey = await sut.loadById(invalidId)
+
+      expect(survey).toBeNull()
+    })
+  })
+
+  const createSurvey = async (): Promise<SurveyModel> => {
+    const addSurveyModel = makeFakeAddSurveyModel()
+    await collection.insertOne(addSurveyModel)
+
+    return MongoHelper.mapToModel<SurveyModel>(addSurveyModel)
+  }
 })
