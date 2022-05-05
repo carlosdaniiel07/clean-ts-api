@@ -94,6 +94,7 @@ describe('SurveyResult Mongo repository', () => {
       })
 
       const surveyResult = await collection.findOne({
+        _id: createdSurveyResult.id,
         accountId: 'any_accountId',
         surveyId: 'any_surveyId',
         answer: 'new_answer'
