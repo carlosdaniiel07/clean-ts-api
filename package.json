@@ -1,6 +1,6 @@
 {
   "name": "clean-ts-api",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Repositório para o desenvolvimento do projeto abordado no curso \"NodeJs, Typescript, TDD, DDD, Clean Architecture e SOLID\" (https://www.udemy.com/course/tdd-com-mango)",
   "main": "index.js",
   "scripts": {
