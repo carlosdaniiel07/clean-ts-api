@@ -3,7 +3,7 @@ import { SurveyModel } from '~/domain/models/survey'
 import { LoadSurveyById } from '~/domain/usecases/load-survey-by-id'
 import {
   SaveSurveyResult,
-  SaveSurveyResultModel
+  SaveSurveyResultParams
 } from '~/domain/usecases/save-survey-result'
 import {
   InvalidParamError,
@@ -61,7 +61,7 @@ const makeLoadSurveyById = (): LoadSurveyById => {
 
 const makeSaveSurveyResult = (): SaveSurveyResult => {
   class SaveSurveyResultStub implements SaveSurveyResult {
-    async save (data: SaveSurveyResultModel): Promise<void> {
+    async save (data: SaveSurveyResultParams): Promise<void> {
       await Promise.resolve()
     }
   }

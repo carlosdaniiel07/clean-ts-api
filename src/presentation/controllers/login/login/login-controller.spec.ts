@@ -1,4 +1,4 @@
-import { Authentication, AuthenticationModel } from '~/domain/usecases/authentication'
+import { Authentication, AuthenticationParams } from '~/domain/usecases/authentication'
 import { MissingParamError } from '~/presentation/errors'
 import { badRequest, ok, unauthorized } from '~/presentation/helpers/http-helper'
 import { HttpRequest, Validation } from '~/presentation/protocols'
@@ -19,7 +19,7 @@ const makeFakeHttpRequest = (): HttpRequest => ({
 
 const makeAuthentication = (): Authentication => {
   class AuthenticationStub implements Authentication {
-    async auth (authentication: AuthenticationModel): Promise<string> {
+    async auth (authentication: AuthenticationParams): Promise<string> {
       return await Promise.resolve('any_access_token')
     }
   }

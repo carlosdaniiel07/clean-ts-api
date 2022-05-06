@@ -2,7 +2,7 @@ import { GetAccountByEmailRepository } from '~/data/protocols/db/account/get-acc
 import {
   AccountModel,
   AddAccount,
-  AddAccountModel,
+  AddAccountParams,
   AddAccountRepository,
   Encrypter
 } from './db-add-account-protocols'
@@ -14,7 +14,7 @@ export class DbAddAccount implements AddAccount {
     private readonly getAccountByEmailRepository: GetAccountByEmailRepository
   ) {}
 
-  async add (addAccount: AddAccountModel): Promise<AccountModel | null> {
+  async add (addAccount: AddAccountParams): Promise<AccountModel | null> {
     const isEmailInUse = !!(await this.getAccountByEmailRepository.getByEmail(
       addAccount.email
     ))

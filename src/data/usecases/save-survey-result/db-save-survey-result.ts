@@ -3,7 +3,7 @@ import { LoadSurveyResultByAccountAndSurveyRepository } from '~/data/protocols/d
 import { UpdateSurveyResultRepository } from '~/data/protocols/db/survey-result/update-survey-result-repository'
 import {
   SaveSurveyResult,
-  SaveSurveyResultModel
+  SaveSurveyResultParams
 } from '~/domain/usecases/save-survey-result'
 
 export class DbSaveSurveyResult implements SaveSurveyResult {
@@ -13,7 +13,7 @@ export class DbSaveSurveyResult implements SaveSurveyResult {
     private readonly updateSurveyResultRepository: UpdateSurveyResultRepository
   ) {}
 
-  async save (data: SaveSurveyResultModel): Promise<void> {
+  async save (data: SaveSurveyResultParams): Promise<void> {
     const { accountId, surveyId } = data
     const surveyResult =
       await this.loadSurveyResultByAccountAndSurveyRepository.loadByAccountAndSurvey(

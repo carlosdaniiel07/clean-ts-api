@@ -2,10 +2,10 @@ import MockDate from 'mockdate'
 import { MongoHelper } from '~/infra/db/mongodb/helpers/mongo-helper'
 import { SurveyMongoRepository } from './survey-mongo-repository'
 import { Collection } from 'mongodb'
-import { AddSurveyModel } from '~/domain/usecases/add-survey'
+import { AddSurveyParams } from '~/domain/usecases/add-survey'
 import { SurveyModel } from '~/domain/models/survey'
 
-const makeFakeAddSurveyModel = (): AddSurveyModel => ({
+const makeFakeAddSurveyModel = (): AddSurveyParams => ({
   question: 'any_question',
   answers: [
     {

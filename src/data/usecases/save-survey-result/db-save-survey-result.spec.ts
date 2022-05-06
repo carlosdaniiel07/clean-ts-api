@@ -3,7 +3,7 @@ import { AddSurveyResultRepository } from '~/data/protocols/db/survey-result/add
 import { LoadSurveyResultByAccountAndSurveyRepository } from '~/data/protocols/db/survey-result/load-survey-result-by-account-and-survey'
 import { UpdateSurveyResultRepository } from '~/data/protocols/db/survey-result/update-survey-result-repository'
 import { SurveyResultModel } from '~/domain/models/survey-result'
-import { SaveSurveyResultModel } from '~/domain/usecases/save-survey-result'
+import { SaveSurveyResultParams } from '~/domain/usecases/save-survey-result'
 import { DbSaveSurveyResult } from './db-save-survey-result'
 
 type SutTypes = {
@@ -29,7 +29,7 @@ const makeLoadSurveyResultByAccountAndSurveyRepository =
 
 const makeAddSurveyResultRepository = (): AddSurveyResultRepository => {
   class AddSurveyResultRepositoryStub implements AddSurveyResultRepository {
-    async add (data: SaveSurveyResultModel): Promise<void> {
+    async add (data: SaveSurveyResultParams): Promise<void> {
       return await Promise.resolve()
     }
   }
@@ -40,7 +40,7 @@ const makeAddSurveyResultRepository = (): AddSurveyResultRepository => {
 const makeUpdateSurveyResultRepository = (): UpdateSurveyResultRepository => {
   class UpdateSurveyResultRepositoryStub
   implements UpdateSurveyResultRepository {
-    async update (id: string, data: SaveSurveyResultModel): Promise<void> {
+    async update (id: string, data: SaveSurveyResultParams): Promise<void> {
       return await Promise.resolve()
     }
   }
@@ -67,7 +67,7 @@ const makeSut = (): SutTypes => {
   }
 }
 
-const makeFakeSaveSurveyResultModel = (): SaveSurveyResultModel => ({
+const makeFakeSaveSurveyResultModel = (): SaveSurveyResultParams => ({
   accountId: 'any_accountId',
   surveyId: 'any_surveyId',
   answer: 'any_answer',
@@ -124,7 +124,7 @@ describe('DbSaveSurveyResult usecase', () => {
       updateSurveyResultRepository
     } = makeSut()
     const spy = jest.spyOn(updateSurveyResultRepository, 'update')
-    const saveSurveyResultModel: SaveSurveyResultModel = {
+    const saveSurveyResultModel: SaveSurveyResultParams = {
       ...makeFakeSaveSurveyResultModel(),
       answer: 'new_answer'
     }

@@ -2,7 +2,7 @@ import { AddSurveyResultRepository } from '~/data/protocols/db/survey-result/add
 import { LoadSurveyResultByAccountAndSurveyRepository } from '~/data/protocols/db/survey-result/load-survey-result-by-account-and-survey'
 import { UpdateSurveyResultRepository } from '~/data/protocols/db/survey-result/update-survey-result-repository'
 import { SurveyResultModel } from '~/domain/models/survey-result'
-import { SaveSurveyResultModel } from '~/domain/usecases/save-survey-result'
+import { SaveSurveyResultParams } from '~/domain/usecases/save-survey-result'
 import { MongoHelper } from '~/infra/db/mongodb/helpers/mongo-helper'
 
 export class SurveyResultMongoRepository
@@ -25,12 +25,12 @@ implements
       : null
   }
 
-  async add (data: SaveSurveyResultModel): Promise<void> {
+  async add (data: SaveSurveyResultParams): Promise<void> {
     const collection = await MongoHelper.getCollection('survey_results')
     await collection.insertOne(data)
   }
 
-  async update (id: string, data: SaveSurveyResultModel): Promise<void> {
+  async update (id: string, data: SaveSurveyResultParams): Promise<void> {
     const collection = await MongoHelper.getCollection('survey_results')
     await collection.updateOne(
       {

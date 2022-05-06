@@ -2,10 +2,10 @@ import MockDate from 'mockdate'
 import { MongoHelper } from '~/infra/db/mongodb/helpers/mongo-helper'
 import { SurveyResultMongoRepository } from './survey-result-mongo-repository'
 import { Collection } from 'mongodb'
-import { SaveSurveyResultModel } from '~/domain/usecases/save-survey-result'
+import { SaveSurveyResultParams } from '~/domain/usecases/save-survey-result'
 import { SurveyResultModel } from '~/domain/models/survey-result'
 
-const makeFakeSaveSurveyResultModel = (): SaveSurveyResultModel => ({
+const makeFakeSaveSurveyResultModel = (): SaveSurveyResultParams => ({
   accountId: 'any_accountId',
   surveyId: 'any_surveyId',
   answer: 'any_answer',

@@ -2,12 +2,12 @@ import request from 'supertest'
 import app from '~/main/config/app'
 import { Collection } from 'mongodb'
 import { sign } from 'jsonwebtoken'
-import { AddSurveyModel } from '~/domain/usecases/add-survey'
+import { AddSurveyParams } from '~/domain/usecases/add-survey'
 import config from '~/main/config/env'
 import { MongoHelper } from '~/infra/db/mongodb/helpers/mongo-helper'
 import { SurveyModel } from '~/domain/models/survey'
 
-const makeAddSurveyModel = (): AddSurveyModel => ({
+const makeAddSurveyModel = (): AddSurveyParams => ({
   question: 'Qual a sua linguagem de programação preferida?',
   answers: [
     {

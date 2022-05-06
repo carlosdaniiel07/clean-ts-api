@@ -3,10 +3,10 @@ import { TokenGenerator } from '~/data/protocols/cryptography/token-generator'
 import { GetAccountByEmailRepository } from '~/data/protocols/db/account/get-account-by-email-repository'
 import { UpdateAccessTokenRepository } from '~/data/protocols/db/account/update-access-token-repository'
 import { AccountModel } from '~/domain/models/account'
-import { AuthenticationModel } from '~/domain/usecases/authentication'
+import { AuthenticationParams } from '~/domain/usecases/authentication'
 import { DbAuthentication } from './db-authentication'
 
-const makeAuthenticationModel = (): AuthenticationModel => ({
+const makeAuthenticationModel = (): AuthenticationParams => ({
   email: 'any_email',
   password: 'any_password_plain_text'
 })

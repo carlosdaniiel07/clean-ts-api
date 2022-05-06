@@ -1,6 +1,6 @@
 import { GetAccountByEmailRepository } from '~/data/protocols/db/account/get-account-by-email-repository'
 import { DbAddAccount } from './db-add-account'
-import { AccountModel, AddAccountModel, AddAccountRepository, Encrypter } from './db-add-account-protocols'
+import { AccountModel, AddAccountParams, AddAccountRepository, Encrypter } from './db-add-account-protocols'
 
 const makeFakeAccount = (): AccountModel => ({
   id: 'valid_id',
@@ -9,7 +9,7 @@ const makeFakeAccount = (): AccountModel => ({
   password: 'valid_password'
 })
 
-const makeFakeAddAccountModel = (): AddAccountModel => ({
+const makeFakeAddAccountModel = (): AddAccountParams => ({
   name: 'valid_name',
   email: 'valid_email',
   password: 'valid_password'
@@ -34,7 +34,7 @@ const makeEncrypter = (): Encrypter => {
 
 const makeAddAccountRepository = (): AddAccountRepository => {
   class AddAccountRepositoryStub implements AddAccountRepository {
-    async add (account: AddAccountModel): Promise<AccountModel> {
+    async add (account: AddAccountParams): Promise<AccountModel> {
       return await Promise.resolve(makeFakeAccount())
     }
   }
