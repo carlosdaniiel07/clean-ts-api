@@ -8,7 +8,7 @@ export const adaptRoute = (controller: Controller): ExpressController => {
     const { statusCode, body } = await controller.handle({
       body: req.body,
       params: req.params,
-      accountId: (req as any).accountId
+      accountId: req.accountId
     })
 
     if (isSuccessResponse(statusCode)) {
