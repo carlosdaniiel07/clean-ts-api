@@ -1,4 +1,4 @@
-import { loginPath, signupPath, surveysPath } from '~/main/docs/paths'
+import { loginPath, signupPath, surveyResultPath, surveysPath } from '~/main/docs/paths'
 import {
   loginSchema,
   loginParamsSchema,
@@ -9,7 +9,8 @@ import {
   surveysSchema,
   surveyAnswerSchema,
   surveyParamsSchema,
-  surveyAnswerParamsSchema
+  surveyAnswerParamsSchema,
+  surveyResultParamsSchema
 } from '~/main/docs/schemas'
 import {
   badRequestComponent,
@@ -51,7 +52,8 @@ export default {
   paths: {
     '/login': loginPath,
     '/signup': signupPath,
-    '/surveys': surveysPath
+    '/surveys': surveysPath,
+    '/surveys/{surveyId}/results': surveyResultPath
   },
   schemas: {
     login: loginSchema,
@@ -63,7 +65,8 @@ export default {
     survey: surveySchema,
     surveyAnswer: surveyAnswerSchema,
     surveyParams: surveyParamsSchema,
-    surveyAnswerParams: surveyAnswerParamsSchema
+    surveyAnswerParams: surveyAnswerParamsSchema,
+    surveyResultParams: surveyResultParamsSchema
   },
   components: {
     securitySchemes: {
