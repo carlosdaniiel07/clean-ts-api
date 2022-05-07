@@ -1,8 +1,9 @@
 export const loginPath = {
   post: {
     tags: ['Auth'],
-    summary:
-      'Endpoint para autenticação do usuário',
+    summary: 'Endpoint para autenticação do usuário',
+    description:
+      'Realiza a autenticação do usuário através do e-mail e senha informados e retorna um token de acesso JWT em caso de sucesso ',
     requestBody: {
       content: {
         'application/json': {
@@ -14,7 +15,7 @@ export const loginPath = {
     },
     responses: {
       200: {
-        description: 'Devolve um token de acesso JWT',
+        description: 'Sucesso',
         content: {
           'application/json': {
             schema: {
@@ -24,7 +25,16 @@ export const loginPath = {
         }
       },
       400: {
-        description: 'Bad Request'
+        $ref: '#/components/badRequest'
+      },
+      401: {
+        $ref: '#/components/unauthorized'
+      },
+      404: {
+        $ref: '#/components/notFound'
+      },
+      500: {
+        $ref: '#/components/serverError'
       }
     }
   }
