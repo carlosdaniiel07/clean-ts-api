@@ -1,34 +1,31 @@
-export const loginPath = {
+export const signupPath = {
   post: {
     tags: ['Auth'],
-    summary: 'Endpoint para autenticação do usuário',
+    summary: 'Endpoint para cadastro de usuário',
     description:
-      'Realiza a autenticação do usuário através do e-mail e senha informados e retorna um token de acesso JWT em caso de sucesso',
+      'Realiza o cadastro do usuário e automaticamente realiza o seu login retornando um token de acesso JWT',
     requestBody: {
       content: {
         'application/json': {
           schema: {
-            $ref: '#/schemas/loginParams'
+            $ref: '#/schemas/signupParams'
           }
         }
       }
     },
     responses: {
-      200: {
+      201: {
         description: 'Sucesso',
         content: {
           'application/json': {
             schema: {
-              $ref: '#/schemas/login'
+              $ref: '#/schemas/signup'
             }
           }
         }
       },
       400: {
         $ref: '#/components/badRequest'
-      },
-      401: {
-        $ref: '#/components/unauthorized'
       },
       404: {
         $ref: '#/components/notFound'

@@ -1,8 +1,10 @@
-import { loginPath } from '~/main/docs/paths'
+import { loginPath, signupPath } from '~/main/docs/paths'
 import {
   loginSchema,
   loginParamsSchema,
-  errorSchema
+  errorSchema,
+  signupSchema,
+  signupParamsSchema
 } from '~/main/docs/schemas'
 import {
   badRequestComponent,
@@ -39,11 +41,14 @@ export default {
     }
   ],
   paths: {
-    '/login': loginPath
+    '/login': loginPath,
+    '/signup': signupPath
   },
   schemas: {
     login: loginSchema,
     loginParams: loginParamsSchema,
+    signup: signupSchema,
+    signupParams: signupParamsSchema,
     error: errorSchema
   },
   components: {
