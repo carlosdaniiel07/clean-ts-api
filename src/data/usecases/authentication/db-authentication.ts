@@ -4,7 +4,7 @@ import { GetAccountByEmailRepository } from '~/data/protocols/db/account/get-acc
 import { UpdateAccessTokenRepository } from '~/data/protocols/db/account/update-access-token-repository'
 import {
   Authentication,
-  AuthenticationModel
+  AuthenticationParams
 } from '~/domain/usecases/authentication'
 
 export class DbAuthentication implements Authentication {
@@ -15,7 +15,7 @@ export class DbAuthentication implements Authentication {
     private readonly hashComparer: HashComparer
   ) {}
 
-  async auth (authentication: AuthenticationModel): Promise<string> {
+  async auth (authentication: AuthenticationParams): Promise<string> {
     const { email, password } = authentication
     const account = await this.getAccountByEmailRepository.getByEmail(email)
 

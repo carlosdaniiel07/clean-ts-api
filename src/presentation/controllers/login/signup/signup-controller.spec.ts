@@ -8,7 +8,7 @@ import {
 import { SignUpController } from './signup-controller'
 import {
   Authentication,
-  AuthenticationModel
+  AuthenticationParams
 } from '~/domain/usecases/authentication'
 import { MissingParamError, ServerError } from '~/presentation/errors'
 import {
@@ -45,7 +45,7 @@ const makeAddAccount = (): AddAccount => {
 
 const makeAuthentication = (): Authentication => {
   class AuthenticationStub implements Authentication {
-    async auth (authentication: AuthenticationModel): Promise<string> {
+    async auth (authentication: AuthenticationParams): Promise<string> {
       return await Promise.resolve('any_access_token')
     }
   }
