@@ -1,7 +1,7 @@
 export const signupPath = {
   post: {
-    tags: ['Auth'],
-    summary: 'Endpoint para cadastro de usuário',
+    tags: ['Autenticação'],
+    summary: 'Cadastro de usuário',
     description:
       'Realiza o cadastro do usuário e automaticamente realiza o seu login retornando um token de acesso JWT',
     requestBody: {

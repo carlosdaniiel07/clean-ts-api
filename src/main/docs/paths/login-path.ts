@@ -1,7 +1,7 @@
 export const loginPath = {
   post: {
-    tags: ['Auth'],
-    summary: 'Endpoint para autenticação do usuário',
+    tags: ['Autenticação'],
+    summary: 'Autenticação do usuário',
     description:
       'Realiza a autenticação do usuário através do e-mail e senha informados e retorna um token de acesso JWT em caso de sucesso',
     requestBody: {

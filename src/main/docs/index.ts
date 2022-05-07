@@ -1,10 +1,13 @@
-import { loginPath, signupPath } from '~/main/docs/paths'
+import { loginPath, signupPath, surveysPath } from '~/main/docs/paths'
 import {
   loginSchema,
   loginParamsSchema,
   errorSchema,
   signupSchema,
-  signupParamsSchema
+  signupParamsSchema,
+  surveySchema,
+  surveysSchema,
+  surveyAnswerSchema
 } from '~/main/docs/schemas'
 import {
   badRequestComponent,
@@ -37,21 +40,35 @@ export default {
   ],
   tags: [
     {
-      name: 'Auth'
+      name: 'Autenticação'
+    },
+    {
+      name: 'Enquete'
     }
   ],
   paths: {
     '/login': loginPath,
-    '/signup': signupPath
+    '/signup': signupPath,
+    '/surveys': surveysPath
   },
   schemas: {
     login: loginSchema,
     loginParams: loginParamsSchema,
     signup: signupSchema,
     signupParams: signupParamsSchema,
-    error: errorSchema
+    error: errorSchema,
+    surveys: surveysSchema,
+    survey: surveySchema,
+    surveyAnswer: surveyAnswerSchema
   },
   components: {
+    securitySchemes: {
+      bearerAuth: {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT'
+      }
+    },
     badRequest: badRequestComponent,
     unauthorized: unauthorizedComponent,
     notFound: notFoundComponent,
