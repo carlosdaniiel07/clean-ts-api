@@ -1,28 +1,23 @@
 import { AddSurveyResultRepository } from '~/data/protocols/db/survey-result/add-survey-result-repository'
-import { LoadSurveyResultByAccountAndSurveyRepository } from '~/data/protocols/db/survey-result/load-survey-result-by-account-and-survey'
+import { CountSurveyResultByAccountAndSurveyRepository } from '~/data/protocols/db/survey-result/count-survey-result-by-account-and-survey'
 import { UpdateSurveyResultRepository } from '~/data/protocols/db/survey-result/update-survey-result-repository'
-import { SurveyResultModel } from '~/domain/models/survey-result'
 import { SaveSurveyResultParams } from '~/domain/usecases/save-survey-result'
 import { MongoHelper } from '~/infra/db/mongodb/helpers/mongo-helper'
 
 export class SurveyResultMongoRepository
 implements
-    LoadSurveyResultByAccountAndSurveyRepository,
+    CountSurveyResultByAccountAndSurveyRepository,
     AddSurveyResultRepository,
     UpdateSurveyResultRepository {
-  async loadByAccountAndSurvey (
+  async countByAccountAndSurvey (
     accountId: string,
     surveyId: string
-  ): Promise<SurveyResultModel | null> {
+  ): Promise<number> {
     const collection = await MongoHelper.getCollection('survey_results')
-    const surveyResult = await collection.findOne({
+    return await collection.countDocuments({
       accountId,
       surveyId
     })
-
-    return surveyResult
-      ? MongoHelper.mapToModel<SurveyResultModel>(surveyResult)
-      : null
   }
 
   async add (data: SaveSurveyResultParams): Promise<void> {
@@ -30,11 +25,13 @@ implements
     await collection.insertOne(data)
   }
 
-  async update (id: string, data: SaveSurveyResultParams): Promise<void> {
+  async update (data: SaveSurveyResultParams): Promise<void> {
+    const { surveyId, accountId } = data
     const collection = await MongoHelper.getCollection('survey_results')
     await collection.updateOne(
       {
-        _id: id
+        surveyId,
+        accountId
       },
       {
         $set: data

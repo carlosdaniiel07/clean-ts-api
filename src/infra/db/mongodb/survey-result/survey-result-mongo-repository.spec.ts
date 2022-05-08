@@ -34,35 +34,28 @@ describe('SurveyResult Mongo repository', () => {
     await collection.deleteMany({})
   })
 
-  describe('loadByAccountAndSurvey()', () => {
-    test('should return a specific survey result by accountId and surveyId', async () => {
+  describe('countByAccountAndSurvey()', () => {
+    test('should return a count of results filtering by accountId and surveyId', async () => {
       const sut = makeSut()
 
       await createSurveyResult()
 
-      const surveyResult = await sut.loadByAccountAndSurvey(
+      const count = await sut.countByAccountAndSurvey(
         'any_accountId',
         'any_surveyId'
       )
 
-      expect(surveyResult).toBeTruthy()
-      expect(surveyResult).toEqual({
-        id: surveyResult?.id,
-        accountId: 'any_accountId',
-        surveyId: 'any_surveyId',
-        answer: 'any_answer',
-        date: new Date()
-      })
+      expect(count).toBe(1)
     })
 
-    test('should return null if specific survey result not exists', async () => {
+    test('should return zero as count if specific survey result not exists', async () => {
       const sut = makeSut()
-      const surveyResult = await sut.loadByAccountAndSurvey(
+      const count = await sut.countByAccountAndSurvey(
         'any_accountId',
         'any_surveyId'
       )
 
-      expect(surveyResult).toBeNull()
+      expect(count).toBe(0)
     })
   })
 
@@ -84,17 +77,17 @@ describe('SurveyResult Mongo repository', () => {
   })
 
   describe('update()', () => {
-    test('should update a survey result by id', async () => {
+    test('should update a survey result', async () => {
       const sut = makeSut()
-      const createdSurveyResult = await createSurveyResult()
 
-      await sut.update(createdSurveyResult.id, {
+      await createSurveyResult()
+
+      await sut.update({
         ...makeFakeSaveSurveyResultModel(),
         answer: 'new_answer'
       })
 
       const surveyResult = await collection.findOne({
-        _id: createdSurveyResult.id,
         accountId: 'any_accountId',
         surveyId: 'any_surveyId',
         answer: 'new_answer'

@@ -1,30 +1,30 @@
 import MockDate from 'mockdate'
 import { AddSurveyResultRepository } from '~/data/protocols/db/survey-result/add-survey-result-repository'
-import { LoadSurveyResultByAccountAndSurveyRepository } from '~/data/protocols/db/survey-result/load-survey-result-by-account-and-survey'
+import { CountSurveyResultByAccountAndSurveyRepository } from '~/data/protocols/db/survey-result/count-survey-result-by-account-and-survey'
 import { UpdateSurveyResultRepository } from '~/data/protocols/db/survey-result/update-survey-result-repository'
-import { SurveyResultModel } from '~/domain/models/survey-result'
 import { SaveSurveyResultParams } from '~/domain/usecases/save-survey-result'
 import { DbSaveSurveyResult } from './db-save-survey-result'
 
 type SutTypes = {
-  loadSurveyResultByAccountAndSurveyRepository: LoadSurveyResultByAccountAndSurveyRepository
+  countSurveyResultByAccountAndSurveyRepository: CountSurveyResultByAccountAndSurveyRepository
   addSurveyResultRepository: AddSurveyResultRepository
   updateSurveyResultRepository: UpdateSurveyResultRepository
   sut: DbSaveSurveyResult
 }
 
-const makeLoadSurveyResultByAccountAndSurveyRepository =
-  (): LoadSurveyResultByAccountAndSurveyRepository => {
-    class LoadSurveyResultByAccountAndSurveyRepositoryStub
-    implements LoadSurveyResultByAccountAndSurveyRepository {
-      async loadByAccountAndSurvey (
-        id: string
-      ): Promise<SurveyResultModel | null> {
-        return await Promise.resolve(null)
+const makeCountSurveyResultByAccountAndSurveyRepository =
+  (): CountSurveyResultByAccountAndSurveyRepository => {
+    class CountSurveyResultByAccountAndSurveyRepositoryStub
+    implements CountSurveyResultByAccountAndSurveyRepository {
+      async countByAccountAndSurvey (
+        accountId: string,
+        surveyId: string
+      ): Promise<number> {
+        return await Promise.resolve(0)
       }
     }
 
-    return new LoadSurveyResultByAccountAndSurveyRepositoryStub()
+    return new CountSurveyResultByAccountAndSurveyRepositoryStub()
   }
 
 const makeAddSurveyResultRepository = (): AddSurveyResultRepository => {
@@ -40,7 +40,7 @@ const makeAddSurveyResultRepository = (): AddSurveyResultRepository => {
 const makeUpdateSurveyResultRepository = (): UpdateSurveyResultRepository => {
   class UpdateSurveyResultRepositoryStub
   implements UpdateSurveyResultRepository {
-    async update (id: string, data: SaveSurveyResultParams): Promise<void> {
+    async update (data: SaveSurveyResultParams): Promise<void> {
       return await Promise.resolve()
     }
   }
@@ -49,18 +49,18 @@ const makeUpdateSurveyResultRepository = (): UpdateSurveyResultRepository => {
 }
 
 const makeSut = (): SutTypes => {
-  const loadSurveyResultByAccountAndSurvey =
-    makeLoadSurveyResultByAccountAndSurveyRepository()
+  const countSurveyResultByAccountAndSurveyRepository =
+    makeCountSurveyResultByAccountAndSurveyRepository()
   const addSurveyResultRepository = makeAddSurveyResultRepository()
   const updateSurveyResultRepository = makeUpdateSurveyResultRepository()
   const sut = new DbSaveSurveyResult(
-    loadSurveyResultByAccountAndSurvey,
+    countSurveyResultByAccountAndSurveyRepository,
     addSurveyResultRepository,
     updateSurveyResultRepository
   )
 
   return {
-    loadSurveyResultByAccountAndSurveyRepository: loadSurveyResultByAccountAndSurvey,
+    countSurveyResultByAccountAndSurveyRepository,
     addSurveyResultRepository,
     updateSurveyResultRepository,
     sut
@@ -68,14 +68,6 @@ const makeSut = (): SutTypes => {
 }
 
 const makeFakeSaveSurveyResultModel = (): SaveSurveyResultParams => ({
-  accountId: 'any_accountId',
-  surveyId: 'any_surveyId',
-  answer: 'any_answer',
-  date: new Date()
-})
-
-const makeFakeSurveyResultModel = (): SurveyResultModel => ({
-  id: 'any_id',
   accountId: 'any_accountId',
   surveyId: 'any_surveyId',
   answer: 'any_answer',
@@ -91,11 +83,11 @@ describe('DbSaveSurveyResult usecase', () => {
     MockDate.reset()
   })
 
-  test('should call LoadSurveyResultByIdRepository with correct value', async () => {
-    const { sut, loadSurveyResultByAccountAndSurveyRepository: loadSurveyResultByAccountAndSurvey } = makeSut()
+  test('should call CountSurveyResultByAccountAndSurveyRepository with correct value', async () => {
+    const { sut, countSurveyResultByAccountAndSurveyRepository } = makeSut()
     const spy = jest.spyOn(
-      loadSurveyResultByAccountAndSurvey,
-      'loadByAccountAndSurvey'
+      countSurveyResultByAccountAndSurveyRepository,
+      'countByAccountAndSurvey'
     )
     const saveSurveyResultModel = makeFakeSaveSurveyResultModel()
 
@@ -107,7 +99,7 @@ describe('DbSaveSurveyResult usecase', () => {
     )
   })
 
-  test('should call AddSurveyResultRepository with correct value when LoadSurveyResultByIdRepository returns null', async () => {
+  test('should call AddSurveyResultRepository with correct value when CountSurveyResultByAccountAndSurveyRepository returns zero', async () => {
     const { sut, addSurveyResultRepository } = makeSut()
     const spy = jest.spyOn(addSurveyResultRepository, 'add')
     const saveSurveyResultModel = makeFakeSaveSurveyResultModel()
@@ -117,10 +109,10 @@ describe('DbSaveSurveyResult usecase', () => {
     expect(spy).toHaveBeenCalledWith(saveSurveyResultModel)
   })
 
-  test('should call UpdateSurveyResultRepository with correct value when LoadSurveyResultByIdRepository not returns null', async () => {
+  test('should call UpdateSurveyResultRepository with correct value when CountSurveyResultByAccountAndSurveyRepository not returns zero', async () => {
     const {
       sut,
-      loadSurveyResultByAccountAndSurveyRepository: loadSurveyResultByAccountAndSurvey,
+      countSurveyResultByAccountAndSurveyRepository,
       updateSurveyResultRepository
     } = makeSut()
     const spy = jest.spyOn(updateSurveyResultRepository, 'update')
@@ -130,19 +122,25 @@ describe('DbSaveSurveyResult usecase', () => {
     }
 
     jest
-      .spyOn(loadSurveyResultByAccountAndSurvey, 'loadByAccountAndSurvey')
-      .mockReturnValueOnce(Promise.resolve(makeFakeSurveyResultModel()))
+      .spyOn(
+        countSurveyResultByAccountAndSurveyRepository,
+        'countByAccountAndSurvey'
+      )
+      .mockReturnValueOnce(Promise.resolve(1))
 
     await sut.save(saveSurveyResultModel)
 
-    expect(spy).toHaveBeenCalledWith('any_id', saveSurveyResultModel)
+    expect(spy).toHaveBeenCalledWith(saveSurveyResultModel)
   })
 
-  test('should throw if LoadSurveyResultByAccountAndSurvey throws', async () => {
-    const { sut, loadSurveyResultByAccountAndSurveyRepository: loadSurveyResultByAccountAndSurvey } = makeSut()
+  test('should throw if CountSurveyResultByAccountAndSurveyRepository throws', async () => {
+    const { sut, countSurveyResultByAccountAndSurveyRepository } = makeSut()
 
     jest
-      .spyOn(loadSurveyResultByAccountAndSurvey, 'loadByAccountAndSurvey')
+      .spyOn(
+        countSurveyResultByAccountAndSurveyRepository,
+        'countByAccountAndSurvey'
+      )
       .mockImplementationOnce(() => {
         throw new Error('any_error')
       })
@@ -155,11 +153,9 @@ describe('DbSaveSurveyResult usecase', () => {
   test('should throw if AddSurveyResultRepository throws', async () => {
     const { sut, addSurveyResultRepository } = makeSut()
 
-    jest
-      .spyOn(addSurveyResultRepository, 'add')
-      .mockImplementationOnce(() => {
-        throw new Error('any_error')
-      })
+    jest.spyOn(addSurveyResultRepository, 'add').mockImplementationOnce(() => {
+      throw new Error('any_error')
+    })
 
     const promise = sut.save(makeFakeSaveSurveyResultModel())
 
@@ -169,13 +165,16 @@ describe('DbSaveSurveyResult usecase', () => {
   test('should throw if UpdateSurveyResultRepository throws', async () => {
     const {
       sut,
-      loadSurveyResultByAccountAndSurveyRepository: loadSurveyResultByAccountAndSurvey,
+      countSurveyResultByAccountAndSurveyRepository,
       updateSurveyResultRepository
     } = makeSut()
 
     jest
-      .spyOn(loadSurveyResultByAccountAndSurvey, 'loadByAccountAndSurvey')
-      .mockReturnValueOnce(Promise.resolve(makeFakeSurveyResultModel()))
+      .spyOn(
+        countSurveyResultByAccountAndSurveyRepository,
+        'countByAccountAndSurvey'
+      )
+      .mockReturnValueOnce(Promise.resolve(1))
     jest
       .spyOn(updateSurveyResultRepository, 'update')
       .mockImplementationOnce(() => {

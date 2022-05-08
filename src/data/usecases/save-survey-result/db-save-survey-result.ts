@@ -1,5 +1,5 @@
 import { AddSurveyResultRepository } from '~/data/protocols/db/survey-result/add-survey-result-repository'
-import { LoadSurveyResultByAccountAndSurveyRepository } from '~/data/protocols/db/survey-result/load-survey-result-by-account-and-survey'
+import { CountSurveyResultByAccountAndSurveyRepository } from '~/data/protocols/db/survey-result/count-survey-result-by-account-and-survey'
 import { UpdateSurveyResultRepository } from '~/data/protocols/db/survey-result/update-survey-result-repository'
 import {
   SaveSurveyResult,
@@ -8,25 +8,21 @@ import {
 
 export class DbSaveSurveyResult implements SaveSurveyResult {
   constructor (
-    private readonly loadSurveyResultByAccountAndSurveyRepository: LoadSurveyResultByAccountAndSurveyRepository,
+    private readonly countSurveyResultByAccountAndSurveyRepository: CountSurveyResultByAccountAndSurveyRepository,
     private readonly addSurveyResultRepository: AddSurveyResultRepository,
     private readonly updateSurveyResultRepository: UpdateSurveyResultRepository
   ) {}
 
   async save (data: SaveSurveyResultParams): Promise<void> {
     const { accountId, surveyId } = data
-    const surveyResult =
-      await this.loadSurveyResultByAccountAndSurveyRepository.loadByAccountAndSurvey(
+    const resultsCount =
+      await this.countSurveyResultByAccountAndSurveyRepository.countByAccountAndSurvey(
         accountId,
         surveyId
       )
-    const alreadyAnswered = !!surveyResult
+    const alreadyAnswered = resultsCount > 0
 
-    alreadyAnswered &&
-      (await this.updateSurveyResultRepository.update(
-        surveyResult.id,
-        data
-      ))
+    alreadyAnswered && (await this.updateSurveyResultRepository.update(data))
     !alreadyAnswered && (await this.addSurveyResultRepository.add(data))
   }
 }
