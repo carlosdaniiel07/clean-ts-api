@@ -88,7 +88,7 @@ implements
       surveyId,
       question: survey.question,
       date: survey.date,
-      answers: surveyResults?.map((item) => {
+      answers: surveyResults.map((item) => {
         const { _id: answer, count } = item
         const { image } = survey.answers.find(
           (surveyAnswer) => surveyAnswer.answer === answer
