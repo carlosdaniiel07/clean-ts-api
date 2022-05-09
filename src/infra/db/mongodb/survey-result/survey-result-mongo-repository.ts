@@ -81,7 +81,7 @@ implements
       ])
       .toArray()
     const totalResults = surveyResults
-      ?.map(({ count }) => count as number)
+      .map(({ count }) => count as number)
       .reduce((total, current) => total + current, 0)
 
     return {
