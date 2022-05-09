@@ -53,7 +53,7 @@ implements
     )
   }
 
-  async loadBySurvey (surveyId: string): Promise<SurveyResultModel | null> {
+  async loadBySurvey (surveyId: string): Promise<SurveyResultModel> {
     const survey = MongoHelper.mapToModel<SurveyModel>(
       await (
         await MongoHelper.getCollection('surveys')
@@ -61,6 +61,7 @@ implements
         _id: new ObjectId(surveyId)
       })
     )
+
     const collection = await MongoHelper.getCollection('survey_results')
     const surveyResults = await collection
       .aggregate([
@@ -92,12 +93,13 @@ implements
         const { image } = survey.answers.find(
           (surveyAnswer) => surveyAnswer.answer === answer
         ) as SurveyAnswerModel
+        const percent = parseFloat(((count / totalResults) * 100).toFixed(2))
 
         return {
           answer,
           count,
           image,
-          percent: (count / totalResults) * 100
+          percent
         }
       })
     }
