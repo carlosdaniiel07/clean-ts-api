@@ -28,8 +28,15 @@ export const surveyResultPath = {
       }
     },
     responses: {
-      204: {
-        description: 'Sucesso'
+      200: {
+        description: 'Sucesso',
+        content: {
+          'application/json': {
+            schema: {
+              $ref: '#/schemas/surveyResult'
+            }
+          }
+        }
       },
       400: {
         $ref: '#/components/badRequest'
