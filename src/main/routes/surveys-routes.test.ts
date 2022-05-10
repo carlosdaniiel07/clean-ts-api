@@ -213,7 +213,7 @@ describe('POST /surveys/:surveyId/results', () => {
       .expect(400)
   })
 
-  test('should return 204 on save survey result', async () => {
+  test('should return 200 on save survey result', async () => {
     const accessToken = await createFakeUserAndGenerateAccessToken(accountCollection)
     const survey = await createFakeSurvey(surveyCollection)
 
@@ -223,6 +223,6 @@ describe('POST /surveys/:surveyId/results', () => {
       .send({
         answer: 'any_answer'
       })
-      .expect(204)
+      .expect(200)
   })
 })

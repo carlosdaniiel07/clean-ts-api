@@ -1,10 +1,11 @@
 import { LoadSurveyById } from '~/domain/usecases/load-survey-by-id'
+import { LoadSurveyResultBySurvey } from '~/domain/usecases/load-survey-result-by-survey'
 import { SaveSurveyResult } from '~/domain/usecases/save-survey-result'
 import { InvalidParamError, NotFoundError } from '~/presentation/errors'
 import {
   badRequest,
-  noContent,
   notFound,
+  ok,
   serverError
 } from '~/presentation/helpers/http-helper'
 import {
@@ -18,7 +19,8 @@ export class SaveSurveyResultController implements Controller {
   constructor (
     private readonly validation: Validation,
     private readonly loadSurveyById: LoadSurveyById,
-    private readonly saveSurveyResult: SaveSurveyResult
+    private readonly saveSurveyResult: SaveSurveyResult,
+    private readonly loadSurveyResultBySurvey: LoadSurveyResultBySurvey
   ) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
@@ -53,7 +55,11 @@ export class SaveSurveyResultController implements Controller {
         date: new Date()
       })
 
-      return noContent()
+      const surveyResult = await this.loadSurveyResultBySurvey.loadBySurvey(
+        surveyId
+      )
+
+      return ok(surveyResult)
     } catch (err) {
       return serverError(err)
     }
