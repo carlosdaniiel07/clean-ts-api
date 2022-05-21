@@ -149,6 +149,43 @@ describe('GET /surveys', () => {
   })
 })
 
+describe('GET /surveys/:surveyId/results', () => {
+  let surveyCollection: Collection
+  let accountCollection: Collection
+  let surveyResultsCollection: Collection
+
+  beforeAll(async () => await MongoHelper.connect(global.__MONGO_URI__))
+
+  afterAll(async () => await MongoHelper.disconnect())
+
+  beforeEach(async () => {
+    surveyCollection = await MongoHelper.getCollection('surveys')
+    accountCollection = await MongoHelper.getCollection('accounts')
+    surveyResultsCollection = await MongoHelper.getCollection('survey_results')
+
+    await surveyCollection.deleteMany({})
+    await accountCollection.deleteMany({})
+    await surveyResultsCollection.deleteMany({})
+  })
+
+  test('should return 401 on add survey result without access token', async () => {
+    await request(app).get('/api/surveys/any_id/results').send().expect(401)
+  })
+
+  test('should return 200 on load survey result', async () => {
+    const accessToken = await createFakeUserAndGenerateAccessToken(
+      accountCollection
+    )
+    const survey = await createFakeSurvey(surveyCollection)
+
+    await request(app)
+      .get(`/api/surveys/${survey.id}/results`)
+      .set('Authorization', `Bearer ${accessToken}`)
+      .send()
+      .expect(200)
+  })
+})
+
 describe('POST /surveys/:surveyId/results', () => {
   let surveyCollection: Collection
   let accountCollection: Collection
@@ -214,7 +251,9 @@ describe('POST /surveys/:surveyId/results', () => {
   })
 
   test('should return 200 on save survey result', async () => {
-    const accessToken = await createFakeUserAndGenerateAccessToken(accountCollection)
+    const accessToken = await createFakeUserAndGenerateAccessToken(
+      accountCollection
+    )
     const survey = await createFakeSurvey(surveyCollection)
 
     await request(app)
