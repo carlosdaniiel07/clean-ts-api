@@ -1,6 +1,14 @@
-import { Authentication, AuthenticationParams } from '~/domain/usecases/authentication'
+import { AuthenticationModel } from '~/domain/models/authentication'
+import {
+  Authentication,
+  AuthenticationParams
+} from '~/domain/usecases/authentication'
 import { MissingParamError } from '~/presentation/errors'
-import { badRequest, ok, unauthorized } from '~/presentation/helpers/http-helper'
+import {
+  badRequest,
+  ok,
+  unauthorized
+} from '~/presentation/helpers/http-helper'
 import { HttpRequest, Validation } from '~/presentation/protocols'
 import { LoginController } from './login-controller'
 
@@ -19,8 +27,14 @@ const makeFakeHttpRequest = (): HttpRequest => ({
 
 const makeAuthentication = (): Authentication => {
   class AuthenticationStub implements Authentication {
-    async auth (authentication: AuthenticationParams): Promise<string> {
-      return await Promise.resolve('any_access_token')
+    async auth (
+      authentication: AuthenticationParams
+    ): Promise<AuthenticationModel> {
+      return await Promise.resolve({
+        accessToken: 'any_access_token',
+        name: 'any_name',
+        email: 'any_email'
+      })
     }
   }
 
@@ -64,7 +78,9 @@ describe('Login controller', () => {
     const { sut, validation } = makeSut()
     const httpRequest = makeFakeHttpRequest()
 
-    jest.spyOn(validation, 'validate').mockReturnValueOnce(new MissingParamError('any_field'))
+    jest
+      .spyOn(validation, 'validate')
+      .mockReturnValueOnce(new MissingParamError('any_field'))
 
     const httpResponse = await sut.handle(httpRequest)
 
@@ -99,8 +115,12 @@ describe('Login controller', () => {
     const httpRequest = makeFakeHttpRequest()
     const httpResponse = await sut.handle(httpRequest)
 
-    expect(httpResponse).toEqual(ok({
-      accessToken: 'any_access_token'
-    }))
+    expect(httpResponse).toEqual(
+      ok({
+        accessToken: 'any_access_token',
+        name: 'any_name',
+        email: 'any_email'
+      })
+    )
   })
 })

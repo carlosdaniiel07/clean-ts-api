@@ -16,6 +16,7 @@ import {
   badRequest,
   created
 } from '~/presentation/helpers/http-helper'
+import { AuthenticationModel } from '~/domain/models/authentication'
 
 const makeFakeHttpRequest = (): HttpRequest => ({
   body: {
@@ -45,8 +46,14 @@ const makeAddAccount = (): AddAccount => {
 
 const makeAuthentication = (): Authentication => {
   class AuthenticationStub implements Authentication {
-    async auth (authentication: AuthenticationParams): Promise<string> {
-      return await Promise.resolve('any_access_token')
+    async auth (
+      authentication: AuthenticationParams
+    ): Promise<AuthenticationModel> {
+      return await Promise.resolve({
+        accessToken: 'any_access_token',
+        name: 'any_name',
+        email: 'any_email'
+      })
     }
   }
 
@@ -186,6 +193,12 @@ describe('SignUp controller', () => {
     const httpRequest = makeFakeHttpRequest()
     const httpResponse = await sut.handle(httpRequest)
 
-    expect(httpResponse).toEqual(created({ accessToken: 'any_access_token' }))
+    expect(httpResponse).toEqual(
+      created({
+        accessToken: 'any_access_token',
+        name: 'any_name',
+        email: 'any_email@email.com'
+      })
+    )
   })
 })

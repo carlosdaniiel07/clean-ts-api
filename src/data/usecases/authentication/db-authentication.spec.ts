@@ -160,9 +160,13 @@ describe('DbAuthentication usecase', () => {
   test('should generate access token if success', async () => {
     const authentication = makeAuthenticationModel()
     const { sut } = makeSut()
-    const accessToken = await sut.auth(authentication)
+    const response = await sut.auth(authentication)
 
-    expect(accessToken).toBeTruthy()
-    expect(accessToken).toBe('any_token')
+    expect(response).toBeTruthy()
+    expect(response).toEqual({
+      accessToken: 'any_token',
+      name: 'any_name',
+      email: 'any_email'
+    })
   })
 })
