@@ -23,13 +23,15 @@ export class LoginController implements Controller {
       }
 
       const { email, password } = body
-      const accessToken = await this.authentication.auth({
+      const { accessToken, name } = await this.authentication.auth({
         email,
         password
       })
 
       return ok({
-        accessToken
+        accessToken,
+        name,
+        email
       })
     } catch (err) {
       return unauthorized()
