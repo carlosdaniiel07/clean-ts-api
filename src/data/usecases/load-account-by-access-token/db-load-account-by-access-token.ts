@@ -13,9 +13,13 @@ export class DbLoadAccountByAccessToken implements LoadAccountByAccessToken {
     accessToken: string,
     role?: string | undefined
   ): Promise<AccountModel | null> {
-    const decryptedAccessToken = await this.decrypter.decrypt(accessToken)
+    try {
+      const decryptedAccessToken = await this.decrypter.decrypt(accessToken)
 
-    if (!decryptedAccessToken) {
+      if (!decryptedAccessToken) {
+        return null
+      }
+    } catch (err) {
       return null
     }
 

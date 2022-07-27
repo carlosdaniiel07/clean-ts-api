@@ -77,16 +77,16 @@ describe('DbLoadAccountByAccessToken usecase', () => {
     expect(response).toBeNull()
   })
 
-  test('should throw if Decrypter throws', async () => {
+  test('should return null if Decrypter throws', async () => {
     const { sut, decrypter } = makeSut()
 
     jest.spyOn(decrypter, 'decrypt').mockImplementationOnce(() => {
       throw new Error('any_error')
     })
 
-    const promise = sut.load('any_token', 'any_role')
+    const response = await sut.load('any_token', 'any_role')
 
-    await expect(promise).rejects.toThrow(new Error('any_error'))
+    expect(response).toBeNull()
   })
 
   test('should call LoadAccountByAccessTokenRepository with correct value', async () => {
