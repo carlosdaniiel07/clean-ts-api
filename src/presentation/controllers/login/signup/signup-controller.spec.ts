@@ -2,7 +2,6 @@ import {
   AddAccount,
   AccountModel,
   AddAccountParams,
-  HttpRequest,
   Validation
 } from './signup-controller-protocols'
 import { SignUpController } from './signup-controller'
@@ -18,13 +17,11 @@ import {
 } from '~/presentation/helpers/http-helper'
 import { AuthenticationModel } from '~/domain/models/authentication'
 
-const makeFakeHttpRequest = (): HttpRequest => ({
-  body: {
-    name: 'any_name',
-    email: 'any_email@email.com',
-    password: 'any_password',
-    passwordConfirmation: 'any_password'
-  }
+const makeFakeRequest = (): SignUpController.Request => ({
+  name: 'any_name',
+  email: 'any_email@email.com',
+  password: 'any_password',
+  passwordConfirmation: 'any_password'
 })
 
 const makeFakeAccount = (): AccountModel => ({
@@ -99,35 +96,35 @@ describe('SignUp controller', () => {
   test('should call Validation with correct value', async () => {
     const { sut, validationStub } = makeSut()
     const spy = jest.spyOn(validationStub, 'validate')
-    const httpRequest = makeFakeHttpRequest()
+    const request = makeFakeRequest()
 
-    await sut.handle(httpRequest)
+    await sut.handle(request)
 
-    expect(spy).toBeCalledWith(httpRequest.body)
+    expect(spy).toBeCalledWith(request)
   })
 
   test('should return 500 if Validation throws', async () => {
     const { sut, validationStub } = makeSut()
-    const httpRequest = makeFakeHttpRequest()
+    const request = makeFakeRequest()
 
     jest.spyOn(validationStub, 'validate').mockImplementationOnce(() => {
       throw new Error()
     })
 
-    const httpResponse = await sut.handle(httpRequest)
+    const httpResponse = await sut.handle(request)
 
     expect(httpResponse).toEqual(serverError(new Error()))
   })
 
   test('should return 400 if Validation returns an error', async () => {
     const { sut, validationStub } = makeSut()
-    const httpRequest = makeFakeHttpRequest()
+    const request = makeFakeRequest()
 
     jest
       .spyOn(validationStub, 'validate')
       .mockReturnValue(new MissingParamError('any_error'))
 
-    const httpResponse = await sut.handle(httpRequest)
+    const httpResponse = await sut.handle(request)
 
     expect(httpResponse).toEqual(badRequest(new MissingParamError('any_error')))
   })
@@ -135,9 +132,9 @@ describe('SignUp controller', () => {
   test('should call AddAccount with correct values', async () => {
     const { sut, addAccountStub } = makeSut()
     const isValidEmailSpy = jest.spyOn(addAccountStub, 'add')
-    const httpRequest = makeFakeHttpRequest()
+    const request = makeFakeRequest()
 
-    await sut.handle(httpRequest)
+    await sut.handle(request)
 
     expect(isValidEmailSpy).toBeCalledWith({
       name: 'any_name',
@@ -149,11 +146,10 @@ describe('SignUp controller', () => {
   test('should call Authentication with correct value', async () => {
     const { sut, authenticationStub } = makeSut()
     const authSpy = jest.spyOn(authenticationStub, 'auth')
-    const httpRequest = makeFakeHttpRequest()
-    const { body } = httpRequest
-    const { email, password } = body
+    const request = makeFakeRequest()
+    const { email, password } = request
 
-    await sut.handle(httpRequest)
+    await sut.handle(request)
 
     expect(authSpy).toHaveBeenCalledWith({
       email,
@@ -163,14 +159,14 @@ describe('SignUp controller', () => {
 
   test('should return 500 if Authentication throws', async () => {
     const { sut, authenticationStub } = makeSut()
-    const httpRequest = makeFakeHttpRequest()
+    const request = makeFakeRequest()
     const error = new Error('unexpected error')
 
     jest.spyOn(authenticationStub, 'auth').mockImplementationOnce(() => {
       throw error
     })
 
-    const response = await sut.handle(httpRequest)
+    const response = await sut.handle(request)
 
     expect(response).toEqual(serverError(error))
   })
@@ -182,16 +178,16 @@ describe('SignUp controller', () => {
       return await Promise.reject(new Error())
     })
 
-    const httpRequest = makeFakeHttpRequest()
-    const httpResponse = await sut.handle(httpRequest)
+    const request = makeFakeRequest()
+    const httpResponse = await sut.handle(request)
 
     expect(httpResponse).toEqual(serverError(new ServerError()))
   })
 
   test('should return 201 if valid data is provided', async () => {
     const { sut } = makeSut()
-    const httpRequest = makeFakeHttpRequest()
-    const httpResponse = await sut.handle(httpRequest)
+    const request = makeFakeRequest()
+    const httpResponse = await sut.handle(request)
 
     expect(httpResponse).toEqual(
       created({

@@ -35,10 +35,12 @@ const makeSut = (): SutTypes => {
   }
 }
 
+const makeFakeRequest = (): AccountsController.Request => ({})
+
 describe('Accounts controller', () => {
   test('should get all accounts and return 200', async () => {
     const { sut } = makeSut()
-    const httpResponse = await sut.handle()
+    const httpResponse = await sut.handle(makeFakeRequest())
 
     expect(httpResponse.statusCode).toBe(200)
     expect(httpResponse.body).toEqual([
@@ -55,7 +57,7 @@ describe('Accounts controller', () => {
     const { sut, getAccounts } = makeSut()
     const spy = jest.spyOn(getAccounts, 'getAll')
 
-    await sut.handle()
+    await sut.handle(makeFakeRequest())
 
     expect(spy).toHaveBeenCalledTimes(1)
   })
@@ -67,7 +69,7 @@ describe('Accounts controller', () => {
       return await Promise.reject(new Error())
     })
 
-    const httpResponse = await sut.handle()
+    const httpResponse = await sut.handle(makeFakeRequest())
 
     expect(httpResponse.statusCode).toBe(500)
     expect(httpResponse.body).toEqual(new ServerError())

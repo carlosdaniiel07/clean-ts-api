@@ -8,14 +8,10 @@ import {
   ok,
   serverError
 } from '~/presentation/helpers/http-helper'
-import {
-  Controller,
-  HttpRequest,
-  HttpResponse,
-  Validation
-} from '~/presentation/protocols'
+import { Controller, HttpResponse, Validation } from '~/presentation/protocols'
 
-export class SaveSurveyResultController implements Controller {
+export class SaveSurveyResultController
+implements Controller<SaveSurveyResultController.Request> {
   constructor (
     private readonly validation: Validation,
     private readonly loadSurveyById: LoadSurveyById,
@@ -23,11 +19,12 @@ export class SaveSurveyResultController implements Controller {
     private readonly loadSurveyResultBySurvey: LoadSurveyResultBySurvey
   ) {}
 
-  async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
+  async handle (
+    request: SaveSurveyResultController.Request
+  ): Promise<HttpResponse> {
     try {
-      const { params, body, accountId } = httpRequest
-      const surveyId = params?.surveyId as string
-      const error = this.validation.validate(body)
+      const { surveyId, accountId, answer } = request
+      const error = this.validation.validate(request)
 
       if (error) {
         return badRequest(error)
@@ -39,7 +36,6 @@ export class SaveSurveyResultController implements Controller {
         return notFound(new NotFoundError('Survey not found'))
       }
 
-      const { answer } = body
       const isValidAnswer = survey.answers
         .map(({ answer }) => answer)
         .includes(answer)
@@ -49,7 +45,7 @@ export class SaveSurveyResultController implements Controller {
       }
 
       await this.saveSurveyResult.save({
-        accountId: accountId as string,
+        accountId,
         surveyId,
         answer,
         date: new Date()
@@ -63,5 +59,13 @@ export class SaveSurveyResultController implements Controller {
     } catch (err) {
       return serverError(err)
     }
+  }
+}
+
+export namespace SaveSurveyResultController {
+  export type Request = {
+    surveyId: string
+    accountId: string
+    answer: string
   }
 }

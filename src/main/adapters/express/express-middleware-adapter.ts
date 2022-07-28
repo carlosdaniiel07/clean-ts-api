@@ -1,14 +1,19 @@
 import { Request, Response, NextFunction } from 'express'
-import { HttpRequest, Middleware } from '~/presentation/protocols'
+import { Middleware } from '~/presentation/protocols'
 
-type ExpressMiddleware = (req: Request, res: Response, next: NextFunction) => void
+type ExpressMiddleware = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => void
 
 export const adaptMiddleware = (middleware: Middleware): ExpressMiddleware => {
   return async (req: Request, res: Response, next: NextFunction) => {
-    const httpRequest: HttpRequest = {
-      headers: req.headers
+    const request = {
+      accessToken: req.headers?.authorization,
+      ...(req.headers ?? {})
     }
-    const httpResponse = await middleware.handle(httpRequest)
+    const httpResponse = await middleware.handle(request)
     const isSuccess = httpResponse.statusCode === 200
 
     if (!isSuccess) {

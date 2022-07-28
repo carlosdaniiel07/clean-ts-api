@@ -1,11 +1,11 @@
 import { LoadSurveys } from '~/domain/usecases/load-surveys'
 import { noContent, ok, serverError } from '~/presentation/helpers/http-helper'
-import { Controller, HttpRequest, HttpResponse } from '~/presentation/protocols'
+import { Controller, HttpResponse } from '~/presentation/protocols'
 
-export class LoadSurveysController implements Controller {
+export class LoadSurveysController implements Controller<LoadSurveysController.Request> {
   constructor (private readonly loadSurveys: LoadSurveys) {}
 
-  async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
+  async handle (request: LoadSurveysController.Request): Promise<HttpResponse> {
     try {
       const data = await this.loadSurveys.load()
       return data.length ? ok(data) : noContent()
@@ -13,4 +13,8 @@ export class LoadSurveysController implements Controller {
       return serverError(err)
     }
   }
+}
+
+export namespace LoadSurveysController {
+  export type Request = {}
 }

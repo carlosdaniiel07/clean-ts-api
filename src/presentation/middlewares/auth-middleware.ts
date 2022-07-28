@@ -5,20 +5,17 @@ import {
   ok,
   serverError
 } from '~/presentation/helpers/http-helper'
-import { Middleware, HttpRequest, HttpResponse } from '~/presentation/protocols'
+import { Middleware, HttpResponse } from '~/presentation/protocols'
 
-export class AuthMiddleware implements Middleware {
+export class AuthMiddleware implements Middleware<AuthMiddleware.Request> {
   constructor (
     private readonly loadAccountByAccessToken: LoadAccountByAccessToken,
     private readonly role?: string
   ) {}
 
-  async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
+  async handle (request: AuthMiddleware.Request): Promise<HttpResponse> {
     try {
-      const { headers } = httpRequest
-      const authorization = (headers.Authorization ??
-        headers.authorization) as string
-      const accessToken = authorization?.substring(7)
+      const accessToken = request.accessToken?.substring(7)
 
       if (!accessToken) {
         return unauthorized(new AccessDeniedError())
@@ -39,5 +36,11 @@ export class AuthMiddleware implements Middleware {
     } catch (err) {
       return serverError(err)
     }
+  }
+}
+
+export namespace AuthMiddleware {
+  export type Request = {
+    accessToken: string
   }
 }

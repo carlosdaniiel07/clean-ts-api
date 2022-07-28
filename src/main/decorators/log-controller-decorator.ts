@@ -1,9 +1,9 @@
 import { LogErrorRepository } from '~/data/protocols/db/log/log-error-repository'
 import { ServerError } from '~/presentation/errors'
 import { serverError } from '~/presentation/helpers/http-helper'
-import { Controller, HttpRequest, HttpResponse } from '~/presentation/protocols'
+import { Controller, HttpResponse } from '~/presentation/protocols'
 
-export class LogControllerDecorator implements Controller {
+export class LogControllerDecorator implements Controller<any> {
   private readonly controller: Controller
   private readonly logErrorRepository?: LogErrorRepository
 
@@ -12,8 +12,8 @@ export class LogControllerDecorator implements Controller {
     this.logErrorRepository = logErrorRepository
   }
 
-  async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
-    const httpResponse = await this.controller.handle(httpRequest)
+  async handle (request: any): Promise<HttpResponse> {
+    const httpResponse = await this.controller.handle(request)
     const isInternalServerError =
       httpResponse.statusCode === serverError().statusCode
 

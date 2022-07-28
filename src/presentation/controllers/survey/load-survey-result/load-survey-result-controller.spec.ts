@@ -3,7 +3,6 @@ import { SurveyResultModel } from '~/domain/models/survey-result'
 import { LoadSurveyResultBySurvey } from '~/domain/usecases/load-survey-result-by-survey'
 import { MissingParamError } from '~/presentation/errors'
 import { badRequest, ok, serverError } from '~/presentation/helpers/http-helper'
-import { HttpRequest } from '~/presentation/protocols'
 import { LoadSurveyResultController } from './load-survey-result-controller'
 
 type SutTypes = {
@@ -31,10 +30,8 @@ const makeSut = (): SutTypes => {
   }
 }
 
-const makeFakeHttpRequest = (): HttpRequest => ({
-  params: {
-    surveyId: 'any_surveyId'
-  }
+const makeFakeRequest = (): LoadSurveyResultController.Request => ({
+  surveyId: 'any_surveyId'
 })
 
 const makeFakeSurveyResultModel = (): SurveyResultModel => ({
@@ -68,16 +65,16 @@ describe('LoadSurveyResult controller', () => {
   test('should call LoadSurveyResultBySurvey with correct value', async () => {
     const { sut, loadSurveyResultBySurvey } = makeSut()
     const spy = jest.spyOn(loadSurveyResultBySurvey, 'loadBySurvey')
-    const httpRequest = makeFakeHttpRequest()
+    const request = makeFakeRequest()
 
-    await sut.handle(httpRequest)
+    await sut.handle(request)
 
-    expect(spy).toHaveBeenCalledWith(httpRequest.params?.surveyId)
+    expect(spy).toHaveBeenCalledWith(request.surveyId)
   })
 
   test('should returns 400 if surveyId was not provided', async () => {
     const { sut } = makeSut()
-    const httpResponse = await sut.handle({})
+    const httpResponse = await sut.handle({} as any)
 
     expect(httpResponse).toEqual(badRequest(new MissingParamError('surveyId')))
   })
@@ -91,14 +88,14 @@ describe('LoadSurveyResult controller', () => {
         throw new Error('any_error')
       })
 
-    const httpResponse = await sut.handle(makeFakeHttpRequest())
+    const httpResponse = await sut.handle(makeFakeRequest())
 
     expect(httpResponse).toEqual(serverError(new Error('any_error')))
   })
 
   test('should return 200 and survey result data', async () => {
     const { sut } = makeSut()
-    const httpResponse = await sut.handle(makeFakeHttpRequest())
+    const httpResponse = await sut.handle(makeFakeRequest())
 
     expect(httpResponse).toEqual(ok(makeFakeSurveyResultModel()))
   })

@@ -1,7 +1,6 @@
 import { SurveyModel } from '~/domain/models/survey'
 import { LoadSurveys } from '~/domain/usecases/load-surveys'
 import { serverError, noContent, ok } from '~/presentation/helpers/http-helper'
-import { HttpRequest } from '~/presentation/protocols'
 import { LoadSurveysController } from './load-surveys-controller'
 
 type SutTypes = {
@@ -30,9 +29,7 @@ const makeSut = (): SutTypes => {
   }
 }
 
-const makeFakeHttpRequest = (): HttpRequest => ({
-  body: null
-})
+const makeFakeRequest = (): LoadSurveysController.Request => ({})
 
 const makeSurveyModel = (): SurveyModel => ({
   id: 'any_id',
@@ -51,7 +48,7 @@ describe('LoadSurveys controller', () => {
     const { sut, loadSurveys } = makeSut()
     const spy = jest.spyOn(loadSurveys, 'load')
 
-    await sut.handle(makeFakeHttpRequest())
+    await sut.handle(makeFakeRequest())
 
     expect(spy).toHaveBeenCalled()
   })
@@ -63,7 +60,7 @@ describe('LoadSurveys controller', () => {
       throw new Error('any_error')
     })
 
-    const response = await sut.handle(makeFakeHttpRequest())
+    const response = await sut.handle(makeFakeRequest())
 
     expect(response).toEqual(serverError(new Error('any_error')))
   })
@@ -73,14 +70,14 @@ describe('LoadSurveys controller', () => {
 
     jest.spyOn(loadSurveys, 'load').mockReturnValueOnce(Promise.resolve([]))
 
-    const response = await sut.handle(makeFakeHttpRequest())
+    const response = await sut.handle(makeFakeRequest())
 
     expect(response).toEqual(noContent())
   })
 
   test('should return 200 and survey list', async () => {
     const { sut } = makeSut()
-    const response = await sut.handle(makeFakeHttpRequest())
+    const response = await sut.handle(makeFakeRequest())
     const surveys = [makeSurveyModel()]
 
     expect(response).toEqual(ok(surveys))

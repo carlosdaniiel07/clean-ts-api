@@ -5,11 +5,12 @@ type ExpressController = (req: Request, res: Response) => void
 
 export const adaptRoute = (controller: Controller): ExpressController => {
   return async (req, res) => {
-    const { statusCode, body } = await controller.handle({
-      body: req.body,
-      params: req.params,
+    const request = {
+      ...(req.body ?? {}),
+      ...(req.params ?? {}),
       accountId: req.accountId
-    })
+    }
+    const { statusCode, body } = await controller.handle(request)
 
     if (isSuccessResponse(statusCode)) {
       return res.status(statusCode).send(body)
