@@ -14,6 +14,7 @@ export const adaptResolver = async (
 
   switch (statusCode) {
     case 200:
+    case 201:
     case 204:
       return body
     case 400:
