@@ -6,11 +6,21 @@ import { LoadSurveysController } from '~/presentation/controllers/survey/load-su
 
 export default {
   Query: {
-    loadSurveys: async (_: any, args: LoadSurveysController.Request) =>
-      await adaptResolver(makeLoadSurveysController(), args),
+    loadSurveys: async (
+      _: any,
+      args: LoadSurveysController.Request,
+      context: any
+    ) => await adaptResolver(makeLoadSurveysController(), args, context, true),
     loadSurveyResults: async (
       _: any,
-      args: LoadSurveyResultController.Request
-    ) => await adaptResolver(makeLoadSurveyResultController(), args)
+      args: LoadSurveyResultController.Request,
+      context: any
+    ) =>
+      await adaptResolver(
+        makeLoadSurveyResultController(),
+        args,
+        context,
+        true
+      )
   }
 }

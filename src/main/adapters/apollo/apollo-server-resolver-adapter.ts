@@ -4,13 +4,23 @@ import {
   ForbiddenError,
   UserInputError
 } from 'apollo-server-express'
-import { Controller } from '~/presentation/protocols'
+import { makeAuthMiddleware } from '~/main/factories/middlewares/auth-middleware-factory'
+import { AuthMiddleware } from '~/presentation/middlewares/auth-middleware'
+import { Controller, Middleware } from '~/presentation/protocols'
+
+const authMiddleware: Middleware<AuthMiddleware.Request> = makeAuthMiddleware()
 
 export const adaptResolver = async (
   controller: Controller,
-  args: any
+  args: any,
+  context?: any,
+  requireAuth?: boolean
 ): Promise<any> => {
-  const { statusCode, body } = await controller.handle(args)
+  const accountId = await getAccountId(context, requireAuth)
+  const { statusCode, body } = await controller.handle({
+    ...args,
+    accountId
+  })
 
   switch (statusCode) {
     case 200:
@@ -26,4 +36,23 @@ export const adaptResolver = async (
     default:
       throw new ApolloError(body.message)
   }
+}
+
+const getAccountId = async (context?: any, requireAuth?: boolean): Promise<string | undefined> => {
+  if (!requireAuth) {
+    return undefined
+  }
+
+  const { req } = context
+  const accessToken = req.headers.authorization
+  const { statusCode, body } = await authMiddleware.handle({
+    accessToken
+  })
+  const isAuthenticated = statusCode === 200
+
+  if (!isAuthenticated) {
+    throw new AuthenticationError('Unauthenticated')
+  }
+
+  return body.accountId
 }

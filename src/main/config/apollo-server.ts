@@ -7,7 +7,10 @@ import resolvers from '~/main/graphql/resolvers'
 export default async (app: Express): Promise<void> => {
   const server = new ApolloServer({
     resolvers,
-    typeDefs
+    typeDefs,
+    context: ({ req }) => ({
+      req
+    })
   })
 
   await server.start()
