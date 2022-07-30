@@ -2,14 +2,14 @@ import { gql } from 'apollo-server-express'
 
 export default gql`
   extend type Query {
-    loadSurveys: [Survey]
+    loadSurveys: [Survey!]!
     loadSurveyResults (surveyId: String!): SurveyResult
   }
 
   type Survey {
     id: ID!
     question: String!
-    answers: [SurveyAnswer]
+    answers: [SurveyAnswer!]!
     date: String!
   }
 
@@ -21,7 +21,7 @@ export default gql`
   type SurveyResult {
     surveyId: ID!
     question: String!
-    answers: [SurveyResultAnswer]
+    answers: [SurveyResultAnswer!]!
     date: String!
   }
 
