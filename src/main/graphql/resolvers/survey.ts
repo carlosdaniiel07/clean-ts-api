@@ -2,9 +2,11 @@ import { adaptResolver } from '~/main/adapters/apollo/apollo-server-resolver-ada
 import { makeAddSurveyController } from '~/main/factories/controllers/survey/add-survey/add-survey-controller-factory'
 import { makeLoadSurveyResultController } from '~/main/factories/controllers/survey/load-survey-result/load-survey-result-controller-factory'
 import { makeLoadSurveysController } from '~/main/factories/controllers/survey/load-surveys/load-surveys-controller-factory'
+import { makeSaveSurveyResultController } from '~/main/factories/controllers/survey/save-survey-result/save-survey-result-controller-factory'
 import { AddSurveyController } from '~/presentation/controllers/survey/add-survey/add-survey-controller'
 import { LoadSurveyResultController } from '~/presentation/controllers/survey/load-survey-result/load-survey-result-controller'
 import { LoadSurveysController } from '~/presentation/controllers/survey/load-surveys/load-surveys-controller'
+import { SaveSurveyResultController } from '~/presentation/controllers/survey/save-survey-result/save-survey-result-controller'
 
 export default {
   Query: {
@@ -34,6 +36,15 @@ export default {
       context: any
     ) =>
       await adaptResolver(makeAddSurveyController(), args.request, {
+        context,
+        requireAuth: true
+      }),
+    addSurveyResult: async (
+      _: any,
+      args: SaveSurveyResultController.Request,
+      context: any
+    ) =>
+      await adaptResolver(makeSaveSurveyResultController(), args, {
         context,
         requireAuth: true
       })

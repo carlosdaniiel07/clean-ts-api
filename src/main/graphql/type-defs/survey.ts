@@ -3,11 +3,12 @@ import { gql } from 'apollo-server-express'
 export default gql`
   extend type Query {
     loadSurveys: [Survey!]!
-    loadSurveyResults (surveyId: String!): SurveyResult
+    loadSurveyResults (surveyId: ID!): SurveyResult!
   }
 
   extend type Mutation {
     addSurvey (request: AddSurvey!): String
+    addSurveyResult (surveyId: ID!, answer: String!): SurveyResult!
   }
 
   type Survey {
