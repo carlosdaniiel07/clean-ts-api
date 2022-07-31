@@ -6,6 +6,10 @@ export default gql`
     loadSurveyResults (surveyId: String!): SurveyResult
   }
 
+  extend type Mutation {
+    addSurvey (request: AddSurvey!): String
+  }
+
   type Survey {
     id: ID!
     question: String!
@@ -30,5 +34,15 @@ export default gql`
     answer: String!
     count: Int!
     percent: Float!
+  }
+
+  input AddSurvey {
+    question: String!
+    answers: [AddSurveyAnswer!]!
+  }
+
+  input AddSurveyAnswer {
+    answer: String!
+    image: String
   }
 `
