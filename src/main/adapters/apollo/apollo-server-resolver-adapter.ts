@@ -10,13 +10,17 @@ import { Controller, Middleware } from '~/presentation/protocols'
 
 const authMiddleware: Middleware<AuthMiddleware.Request> = makeAuthMiddleware()
 
+type ResolverOptions = {
+  context?: any
+  requireAuth?: boolean
+}
+
 export const adaptResolver = async (
   controller: Controller,
   args: any,
-  context?: any,
-  requireAuth?: boolean
+  options?: ResolverOptions
 ): Promise<any> => {
-  const accountId = await getAccountId(context, requireAuth)
+  const accountId = await getAccountId(options)
   const { statusCode, body } = await controller.handle({
     ...args,
     accountId
@@ -38,12 +42,14 @@ export const adaptResolver = async (
   }
 }
 
-const getAccountId = async (context?: any, requireAuth?: boolean): Promise<string | undefined> => {
-  if (!requireAuth) {
+const getAccountId = async (
+  options?: ResolverOptions
+): Promise<string | undefined> => {
+  if (!options?.requireAuth) {
     return undefined
   }
 
-  const { req } = context
+  const { req } = options.context
   const accessToken = req.headers.authorization
   const { statusCode, body } = await authMiddleware.handle({
     accessToken

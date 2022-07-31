@@ -10,17 +10,19 @@ export default {
       _: any,
       args: LoadSurveysController.Request,
       context: any
-    ) => await adaptResolver(makeLoadSurveysController(), args, context, true),
+    ) =>
+      await adaptResolver(makeLoadSurveysController(), args, {
+        context,
+        requireAuth: true
+      }),
     loadSurveyResults: async (
       _: any,
       args: LoadSurveyResultController.Request,
       context: any
     ) =>
-      await adaptResolver(
-        makeLoadSurveyResultController(),
-        args,
+      await adaptResolver(makeLoadSurveyResultController(), args, {
         context,
-        true
-      )
+        requireAuth: true
+      })
   }
 }
