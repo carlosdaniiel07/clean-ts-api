@@ -8,7 +8,7 @@ export class LoadSurveysController implements Controller<LoadSurveysController.R
   async handle (request: LoadSurveysController.Request): Promise<HttpResponse> {
     try {
       const data = await this.loadSurveys.load()
-      return data.length ? ok(data) : noContent()
+      return data.length ? ok(data) : noContent([])
     } catch (err) {
       return serverError(err)
     }

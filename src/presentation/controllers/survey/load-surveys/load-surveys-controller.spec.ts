@@ -72,7 +72,7 @@ describe('LoadSurveys controller', () => {
 
     const response = await sut.handle(makeFakeRequest())
 
-    expect(response).toEqual(noContent())
+    expect(response).toEqual(noContent([]))
   })
 
   test('should return 200 and survey list', async () => {

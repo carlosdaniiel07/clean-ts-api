@@ -11,9 +11,9 @@ export const created = (body?: any): HttpResponse => ({
   body
 })
 
-export const noContent = (): HttpResponse => ({
+export const noContent = (body?: any): HttpResponse => ({
   statusCode: 204,
-  body: null
+  body
 })
 
 export const badRequest = (body: any): HttpResponse => ({
