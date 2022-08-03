@@ -446,7 +446,7 @@ describe('Save survey result GraphQL', () => {
       query: makeAddSurveyResultMutation(),
       variables: {
         surveyId: survey.id.toString(),
-        answer: survey.answers.at(0)?.answer
+        answer: survey.answers[0]?.answer
       }
     })
 
