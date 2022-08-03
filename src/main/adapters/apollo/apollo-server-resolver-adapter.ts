@@ -37,6 +37,8 @@ export const adaptResolver = async (
       throw new AuthenticationError(body.message)
     case 403:
       throw new ForbiddenError(body.message)
+    case 404:
+      throw new UserInputError(body.message)
     default:
       throw new ApolloError(body.message)
   }
@@ -57,7 +59,7 @@ const getAccountId = async (
   const isAuthenticated = statusCode === 200
 
   if (!isAuthenticated) {
-    throw new AuthenticationError('Unauthenticated')
+    throw new AuthenticationError('Unauthorized')
   }
 
   return body.accountId
